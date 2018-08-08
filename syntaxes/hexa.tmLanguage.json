@@ -1,0 +1,215 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Hexa",
+	"scopeName": "source.hexa",
+	"uuid": "66b008f2-f9ad-481c-8d85-ecf5d0d88ff9",
+	"patterns": [
+		{
+			"name": "keyword.others.hexa",
+			"match": "^\\s*(#if|#else|#end|#elseif)\\b"
+		},
+		{
+			"name": "keyword.declaration.hexa",
+			"match": "\\b(declare)\\b"
+		},
+		{
+			"name": "storage.type.hexa",
+			"match": "\\b(module|class|interface|enum|let|var|function)\\b"
+		},
+		{
+			"name": "storage.modifier.hexa",
+			"match": "\\b(export|private|static)\\b"
+		},
+		{
+			"name": "keyword.statement.hexa",
+			"match": "\\b(try|catch|break|case|continue|do|else|if|in|for|return|throw|switch|while)\\b"
+		},
+		{
+			"name": "support.type.hexa",
+			"match": "\\b([A-Z][A-Za-z_0-9]*)\\b"
+		},
+		{
+			"name": "keyword.expressions-and-types.hexa",
+			"match": "\\b(as|is|new|this|super)\\b"
+		},
+		{
+			"name": "constant.language.hexa",
+			"match": "\\b(true|false|null)\\b"
+		},
+		{
+			"name": "storage.attribute.hexa",
+			"match": "@[a-zA-Z]\\w*"
+		},
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#literal"
+		},
+		{
+			"include": "#operator"
+		}
+	],
+	"repository": {
+		"comment": {
+			"patterns": [
+				{
+					"name": "comment.block.hexa",
+					"begin": "/\\*",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.hexa"
+						}
+					},
+					"end": "\\*/",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.hexa"
+						}
+					}
+				},
+				{
+					"begin": "(^\\s+)?(?=//)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.hexa"
+						}
+					},
+					"end": "(?=$)",
+					"patterns": [
+						{
+							"name": "comment.block.documentation.hexa",
+							"begin": "(?<!/)///(?!/)",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.comment.hexa"
+								}
+							},
+							"end": "(?=$)"
+						},
+						{
+							"name": "comment.line.double-slash.cs",
+							"begin": "(?<!/)//(?:(?!/)|(?=//))",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.comment.hexa"
+								}
+							},
+							"end": "(?=$)"
+						}
+					]
+				}
+			]
+		},
+		"escaped-char": {
+			"patterns": [
+				{
+					"name": "constant.character.escape.hexa",
+					"match": "\\\\[0\\\\tnr\"']"
+				},
+				{
+					"name": "constant.character.escape.hexa",
+					"match": "\\\\(x\\h{2}|u\\h{4}|U\\h{8})"
+				},
+				{
+					"name": "invalid.illegal.constant.character.escape.hexa",
+					"match": "\\\\[^uxU]"
+				}
+			]
+		},
+		"literal": {
+			"patterns": [
+				{
+					"include": "#literal-number"
+				},
+				{
+					"include": "#literal-string"
+				},
+				{
+					"include": "#raw-string"
+				}
+			]
+		},
+		"literal-number": {
+			"name": "constant.numeric.hexa",
+			"match": "\\b(0(x|X)[0-9a-fA-F]*)\\b"
+		},
+		"literal-string": {
+			"name": "string.quoted.hexa",
+			"begin": "([\"'])",
+			"end": "([\"'])",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.hexa"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.hexa"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#quoted-text"
+				}
+			]
+		},
+		"raw-string": {
+			"name": "string.quoted.hexa",
+			"begin": "`",
+			"end": "`",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.hexa"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.hexa"
+				}
+			}
+		},
+		"operator": {
+			"patterns": [
+				{
+					"include": "#operator-character"
+				}
+			]
+		},
+		"operator-character": {
+			"name": "keyword.operator.hexa",
+			"match": "[\\/=\\-+!*%<>&|^~,\\?:\\[\\]]"
+		},
+		"quoted-text": {
+			"patterns": [
+				{
+					"name": "meta.embedded.line.hexa",
+					"contentName": "source.hexa",
+					"begin": "\\\\\\(",
+					"end": "\\)",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.embedded.begin.hexa"
+						}
+					},
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.section.embedded.end.hexa"
+						}
+					},
+					"patterns": [
+						{
+							"include": "$self"
+						}
+					]
+				},
+				{
+					"include": "#escaped-char"
+				}
+			]
+		},
+		"whitespace": {
+			"match": "(?x) [ \\u0020 (?#           space) \\u000A (?#       line-feed) \\u000D (?# carriage-return) \\u0009 (?#  horizontal-tab) \\u000B (?#    vertical-tab) \\u000C (?#       form-feed) \\u0000 (?#            null) ]"
+		}
+	}
+}

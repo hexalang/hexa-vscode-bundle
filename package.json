@@ -1,0 +1,42 @@
+{
+    "name": "vshexa",
+    "displayName": "Hexa",
+    "description": "Hexa Programming Language",
+    "version": "0.0.1",
+    "publisher": "PeyTy",
+    "author": "Bogdan Danylchenko",
+    "license": "LGPL-2.1-or-later",
+    "engines": {
+        "vscode": "^1.25.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Linters"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "hexa",
+                "aliases": [
+                    "Hexa",
+                    "hexa"
+                ],
+                "extensions": [
+                    ".hexa"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "hexa",
+                "scopeName": "source.hexa",
+                "path": "./syntaxes/hexa.tmLanguage.json"
+            }
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hexalang/hexa-vscode-bundle.git"
+    }
+}
