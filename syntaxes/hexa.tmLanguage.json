@@ -135,22 +135,46 @@
 			"match": "\\b(0(x|X)[0-9a-fA-F]*)\\b"
 		},
 		"literal-string": {
-			"name": "string.quoted.hexa",
-			"begin": "([\"'])",
-			"end": "([\"'])",
-			"beginCaptures": {
-				"0": {
-					"name": "punctuation.definition.string.begin.hexa"
-				}
-			},
-			"endCaptures": {
-				"0": {
-					"name": "punctuation.definition.string.end.hexa"
-				}
-			},
 			"patterns": [
 				{
-					"include": "#quoted-text"
+					"begin": "([\"])",
+					"end": "([\"])",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.hexa"
+						}
+					},
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.hexa"
+						}
+					},
+					"name": "string.quoted.double.hexa",
+					"patterns": [
+						{
+							"include": "#quoted-text"
+						}
+					]
+				},
+				{
+					"begin": "(['])",
+					"end": "(['])",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.hexa"
+						}
+					},
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.hexa"
+						}
+					},
+					"name": "string.quoted.single.hexa",
+					"patterns": [
+						{
+							"include": "#quoted-text"
+						}
+					]
 				}
 			]
 		},
