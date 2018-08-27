@@ -5,6 +5,10 @@
 	"uuid": "66b008f2-f9ad-481c-8d85-ecf5d0d88ff9",
 	"patterns": [
 		{
+			"name": "invalid.hexa",
+			"match": ";"
+		},
+		{
 			"name": "keyword.others.hexa",
 			"match": "^\\s*(#if|#else|#end|#elseif)\\b"
 		},
