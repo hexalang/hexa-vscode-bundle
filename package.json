@@ -59,6 +59,12 @@
     "bugs": {
         "url": "https://github.com/hexalang/hexa-vscode-bundle/issues"
     },
+    "snippets": [
+        {
+            "language": "hexa",
+            "path": "./snippets/hexa.json"
+        }
+    ],
     "dependencies": {
         "vscode": "^1.1.21",
     }

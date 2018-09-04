@@ -1,0 +1,68 @@
+{
+    "for": {
+        "prefix": "for",
+        "body": [
+            "for (${2:element} of ${1:array}) {",
+            "\t$0",
+            "}"
+        ]
+    },
+    "if": {
+        "prefix": "if",
+        "body": [
+            "if (${1:condition}) {",
+            "\t$0",
+            "}"
+        ]
+    },
+    "ifelse": {
+        "prefix": "ifelse",
+        "body": [
+            "if (${1:condition}) {",
+            "\t$0",
+            "} else {",
+            "\t",
+            "}"
+        ]
+    },
+    "new": {
+        "prefix": "new",
+        "body": [
+            "let ${1:name} = new ${2:type}(${3:arguments})$0"
+        ]
+    },
+    "while": {
+        "prefix": "while",
+        "body": [
+            "while (${1:condition}) {",
+            "\t$0",
+            "}"
+        ]
+    },
+    "function": {
+        "prefix": "function",
+        "body": [
+            "function ${1:name}(${2:params}: ${3:type}) {",
+            "\t$0",
+            "}"
+        ]
+    },
+    "trycatch": {
+        "prefix": "trycatch",
+        "body": [
+            "try {",
+            "\t$0",
+            "} catch (${1:error}) {",
+            "\t",
+            "}"
+        ]
+    },
+    "lambda": {
+        "prefix": "lambda",
+        "body": [
+            "(${2:params}: ${3:type}) => {",
+            "\t$0",
+            "}"
+        ]
+    }
+}
