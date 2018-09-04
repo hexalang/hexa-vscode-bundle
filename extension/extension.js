@@ -14,5 +14,5 @@ exports.activate = function (context) {
     workspace.onDidOpenTextDocument((document) => { linter.lint(document) })
     workspace.onDidSaveTextDocument((document) => { linter.lint(document) })
     workspace.onDidCloseTextDocument((document) => { linter.clear(document) })
-    workspace.onDidChangeTextDocument((document) => { linter.clear(document) })
+    workspace.onDidChangeTextDocument((document) => { linter.lint(document) })
 }
