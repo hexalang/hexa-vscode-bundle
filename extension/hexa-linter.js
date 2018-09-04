@@ -29,7 +29,7 @@ class HexaLinter {
         this.diagnostics.delete(document.uri)
 
         let eventHandler = (data) => {
-            console.log("[Hexa-Lint] Handled data.")
+            console.log("[Hexa-Lint] Handled data.", data)
 
             let msgs = data.split("\n");
             console.log(`[Hexa-Lint] Got ${msgs.length} data lines.`)
