@@ -6,6 +6,7 @@
     "publisher": "PeyTy",
     "author": "Bogdan Danylchenko",
     "license": "LGPL-2.1-or-later",
+    "icon": "images/icon.png",
     "engines": {
         "vscode": "^1.25.0"
     },
