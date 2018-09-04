@@ -36,41 +36,40 @@ class HexaLinter {
 
             // Parse the report
             let entries = []
-            let file
             // Parse offenses for the file
             let diagnostics = []
             for (const msg of msgs) {
                 if (!msg.startsWith("["))
                     continue
 
-                let match = msg.match(/\[(.*):([0-9]+):([0-9]+)\]:(.*)$/)
-
-                if (match == null) {
-                    console.log(`[Hexa-Lint] Can not parse message '${msg}'.`)
-                    continue
-                }
-
-                let parsed = {
-                    filename: march[1],
-                    line: Number(match[2]) - 1,
-                    col: Number(match[3]) - 1,
-                    msgtext: match[4]
-                }
-
-                console.log(`[Hexa-Lint] Compiler message parsed successfully.`, parsed)
-
-                let lineindoc = document.lineAt(line);
-
-                console.log(`[Hexa-Lint] Got needed line from document.`, lineindoc)
-
                 try {
+                    let match = msg.match(/\[(.*):([-0-9]+):([-0-9]+)\]:(.*)$/)
+
+                    if (match == null) {
+                        console.log(`[Hexa-Lint] Can not parse message '${msg}'.`)
+                        continue
+                    }
+
+                    let parsed = {
+                        filename: match[1],
+                        line: Number(match[2]) - 1,
+                        col: Number(match[3]) + 1, // FIXME // TODO
+                        msgtext: match[4]
+                    }
+
+                    console.log(`[Hexa-Lint] Compiler message parsed successfully.`, parsed)
+
+                    let lineindoc = document.lineAt(parsed.line);
+
+                    console.log(`[Hexa-Lint] Got needed line from document.`, lineindoc)
+
                     let range = new vscode.Range(
-                        line, col,
-                        line, lineindoc.range.end.character
+                        parsed.line, parsed.col,
+                        parsed.line, lineindoc.range.end.character
                     )
                     console.log(`Created range: `, range)
 
-                    let diagnostic = new vscode.Diagnostic(range, msgtext, vscode.DiagnosticSeverity.Error)
+                    let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
                     diagnostics.push(diagnostic)
                 }
                 catch (err) {
