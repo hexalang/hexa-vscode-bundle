@@ -2,7 +2,7 @@
     "name": "vshexa",
     "displayName": "Hexa",
     "description": "Hexa Programming Language",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "publisher": "PeyTy",
     "author": "Bogdan Danylchenko",
     "license": "LGPL-2.1-or-later",
@@ -11,6 +11,10 @@
     "engines": {
         "vscode": "^1.25.0"
     },
+    "activationEvents": [
+        "onLanguage:hexa"
+    ],
+    "main": "./extension/extension.js",
     "categories": [
         "Programming Languages",
         "Linters"
@@ -35,7 +39,18 @@
                 "scopeName": "source.hexa",
                 "path": "./syntaxes/hexa.tmLanguage.json"
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Hexa Linter configuration",
+            "properties": {
+                "hexa-lint.path": {
+                    "type": "string",
+                    "default": "hexa",
+                    "description": "Path to Hexa compiler"
+                }
+            }
+        }
     },
     "repository": {
         "type": "git",
