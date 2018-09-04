@@ -7,6 +7,7 @@
     "author": "Bogdan Danylchenko",
     "license": "LGPL-2.1-or-later",
     "icon": "images/icon.png",
+    "homepage": "https://github.com/hexalang/hexa-vscode-bundle/blob/master/README.md",
     "engines": {
         "vscode": "^1.25.0"
     },
