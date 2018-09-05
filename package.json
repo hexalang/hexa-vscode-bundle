@@ -50,7 +50,13 @@
                     "description": "Path to Hexa compiler"
                 }
             }
-        }
+        },
+        "snippets": [
+            {
+                "language": "hexa",
+                "path": "./snippets/hexa.json"
+            }
+        ]
     },
     "repository": {
         "type": "git",
@@ -59,12 +65,6 @@
     "bugs": {
         "url": "https://github.com/hexalang/hexa-vscode-bundle/issues"
     },
-    "snippets": [
-        {
-            "language": "hexa",
-            "path": "./snippets/hexa.json"
-        }
-    ],
     "dependencies": {
         "vscode": "^1.1.21",
     }
