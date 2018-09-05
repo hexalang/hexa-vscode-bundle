@@ -1,68 +1,56 @@
 {
-    "for": {
-        "prefix": "for",
-        "body": [
-            "for (${2:element} of ${1:array}) {",
-            "\t$0",
-            "}"
-        ]
-    },
-    "if": {
-        "prefix": "if",
-        "body": [
-            "if (${1:condition}) {",
-            "\t$0",
-            "}"
-        ]
-    },
-    "ifelse": {
-        "prefix": "ifelse",
-        "body": [
-            "if (${1:condition}) {",
-            "\t$0",
-            "} else {",
-            "\t",
-            "}"
-        ]
-    },
-    "new": {
-        "prefix": "new",
-        "body": [
-            "let ${1:name} = new ${2:type}(${3:arguments})$0"
-        ]
-    },
-    "while": {
-        "prefix": "while",
-        "body": [
-            "while (${1:condition}) {",
-            "\t$0",
-            "}"
-        ]
-    },
-    "function": {
-        "prefix": "function",
-        "body": [
-            "function ${1:name}(${2:params}: ${3:type}) {",
-            "\t$0",
-            "}"
-        ]
-    },
-    "trycatch": {
-        "prefix": "trycatch",
-        "body": [
-            "try {",
-            "\t$0",
-            "} catch (${1:error}) {",
-            "\t",
-            "}"
-        ]
-    },
-    "lambda": {
-        "prefix": "lambda",
-        "body": [
-            "(${2:params}: ${3:type}) => {",
-            "\t$0",
-            "}"
-        ]
+    ".source.hexa": {
+        "for (element in array) { }": {
+            "prefix": "for",
+            "body": "for (${2:element} in ${1:array}) {\n\t$0\n}"
+        },
+        "if { }": {
+            "prefix": "if",
+            "body": "if (${1:condition}) {\n\t$0\n}"
+        },
+        "if (let name = expression) { }": {
+            "prefix": "iflet",
+            "body": "if (let ${1:name} = ${2:expression}) {\n\t$0\n}"
+        },
+        "if (let name = expression) { } else { }": {
+            "prefix": "ifletelse",
+            "body": "if (let ${1:name} = ${2:expression}) {\n\t$0\n} else {\n\t\n}"
+        },
+        "if (condition) { } else { }": {
+            "prefix": "ifelse",
+            "body": "if (${1:condition}) {\n\t$0\n} else {\n\t\n}"
+        },
+        "let name = new type(arguments)": {
+            "prefix": "new",
+            "body": "let ${1:name} = new ${2:type}(${3:arguments})$0"
+        },
+        "while(condition) { }": {
+            "prefix": "while",
+            "body": "while (${1:condition}) {\n\t$0\n}"
+        },
+        "do { } while(condition)": {
+            "prefix": "do",
+            "body": "do {\n\t$2\n} while (${1:condition});"
+        },
+        "condition ? true : false": {
+            "prefix": "tern",
+            "body": "${1:condition} ? ${2:true} : ${3:false}"
+        },
+        "function": {
+            "prefix": "function",
+            "body": "function ${1:name}(${2:params}: ${3:type}) {\n\t$0\n}"
+        },
+        "(param: type) => { }": {
+            "prefix": "lambda",
+            "body": "(${2:param}: ${3:type}) => {\n\t$0\n}"
+        },
+        "return": {
+            "prefix": "ret",
+            "body": "return $1;$0"
+        },
+        "try { } catch (error) { }": {
+            "prefix": "trycatch",
+            "body": "try {\n\t$0\n} catch (${1:error}) {\n\t\n}"
+        }
     }
 }
