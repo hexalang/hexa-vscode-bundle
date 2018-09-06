@@ -1,6 +1,15 @@
 const childProcess = require('child_process')
 const vscode = require('vscode')
 
+
+function getWord(line, col) {
+    let subline = line.substr(col, line.length - col);
+
+    let word = subline.split("(")[0].split(" ")[0].split(",")[0].split(")")[0].split(".")[0]
+
+    return word;
+}
+
 class HexaLinter {
     constructor(diagnostics) {
         this.diagnostics = diagnostics
@@ -53,7 +62,7 @@ class HexaLinter {
                     let parsed = {
                         filename: match[1],
                         line: Number(match[2]) - 1,
-                        col: Number(match[3]) + 1, // FIXME // TODO
+                        col: Number(match[3]), // FIXME // TODO
                         msgtext: match[4]
                     }
 
@@ -63,9 +72,12 @@ class HexaLinter {
 
                     console.log(`[Hexa-Lint] Got needed line from document.`, lineindoc)
 
+                    let errorWord = getWord(lineindoc.text, parsed.col);
+                    console.log(`[Hexa-Lint] Word found.`, errorWord)
+
                     let range = new vscode.Range(
                         parsed.line, parsed.col,
-                        parsed.line, lineindoc.range.end.character
+                        parsed.line, parsed.col + errorWord.length
                     )
                     console.log(`Created range: `, range)
 
