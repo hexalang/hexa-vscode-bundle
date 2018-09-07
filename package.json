@@ -42,7 +42,7 @@
         ],
         "configuration": {
             "type": "object",
-            "title": "Hexa Linter configuration",
+            "title": "Hexa",
             "properties": {
                 "hexa-lint.path": {
                     "type": "string",
