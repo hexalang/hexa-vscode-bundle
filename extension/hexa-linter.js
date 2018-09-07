@@ -29,7 +29,7 @@ class HexaLinter {
             return
         }
 
-        // Asynchronously run hexa-lint
+        // Asynchronously run Hexa syntax linter
         let linter = childProcess.exec(
             `${path} --syntax-linter ${document.fileName}`,
             { 'cwd': vscode.workspace.rootPath } // Current working directory
@@ -106,7 +106,7 @@ class HexaLinter {
     }
 
     updateConfig(config) {
-        this.config = vscode.workspace.getConfiguration('hexa-lint')
+        this.config = vscode.workspace.getConfiguration('hexa')
         console.log("[Hexa-Lint] Configuration updated.")
     }
 }

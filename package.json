@@ -44,7 +44,7 @@
             "type": "object",
             "title": "Hexa",
             "properties": {
-                "hexa-lint.path": {
+                "hexa.path": {
                     "type": "string",
                     "default": "hexa",
                     "description": "Path to Hexa compiler"
