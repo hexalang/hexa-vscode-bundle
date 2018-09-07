@@ -1,6 +1,12 @@
 # hexa-vscode-bundle
 Visual Studio Code support
 
+## Features
+
+ - Syntax highlighting
+ - Basic linting
+ - Providing snippets
+
 ## Install
 
 ```sh
