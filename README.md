@@ -19,4 +19,4 @@ git clone https://github.com/hexalang/hexa-vscode-bundle.git
 
 ## Configuration
 
-The path to the compiler should be allowed in the setting tab "hexa.path"
+The path to the compiler should be allowed in the setting tab `hexa.path`
