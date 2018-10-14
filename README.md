@@ -15,6 +15,8 @@ Visual Studio Code support
 ```sh
 cd ~/.vscode/extensions
 git clone https://github.com/hexalang/hexa-vscode-bundle.git
+cd hexa-vscode-bundle
+npm i
 ```
 
 ## Configuration
