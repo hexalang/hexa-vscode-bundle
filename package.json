@@ -66,6 +66,5 @@
         "url": "https://github.com/hexalang/hexa-vscode-bundle/issues"
     },
     "dependencies": {
-        "vscode": "^1.1.21"
     }
 }
