@@ -1,6 +1,4 @@
-# hexa-vscode-bundle
-
-Visual Studio Code support
+# Hexa Visual Studio Code support
 
 [![Join the Gitter chat](https://badges.gitter.im/hexalang/hexalang.svg)](https://gitter.im/hexalang/VSCode?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
@@ -11,6 +9,10 @@ Visual Studio Code support
  - Providing snippets
 
 ## Install
+
+<https://marketplace.visualstudio.com/items?itemName=PeyTy.vshexa>
+
+## Install manually
 
 ```sh
 cd ~/.vscode/extensions
