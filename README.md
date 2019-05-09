@@ -2,11 +2,14 @@
 
 [![Join the Gitter chat](https://badges.gitter.im/hexalang/hexalang.svg)](https://gitter.im/hexalang/VSCode?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
+![Screenshot](screenshot.png?raw=true)
+
 ## Features
 
  - Syntax highlighting
  - Basic linting
  - Providing snippets
+ - Also compatible with [VSCodium](https://vscodium.com/)
 
 ## Install
 
