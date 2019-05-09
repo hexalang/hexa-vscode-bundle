@@ -1,4 +1,4 @@
-# Hexa Visual Studio Code support
+# Visual Studio Code support for [Hexa](https://github.com/hexalang)
 
 [![Join the Gitter chat](https://badges.gitter.im/hexalang/hexalang.svg)](https://gitter.im/hexalang/VSCode?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
