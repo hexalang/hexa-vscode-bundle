@@ -73,6 +73,10 @@
 					},
 					"patterns": [
 						{
+							"name": "keyword.declaration.hexa",
+							"match": "\\b(TODO)\\b"
+						},
+						{
 							"include": "#comment"
 						}
 					]
@@ -94,6 +98,12 @@
 									"name": "punctuation.definition.comment.hexa"
 								}
 							},
+							"patterns": [
+								{
+									"name": "keyword.declaration.hexa",
+									"match": "\\b(TODO)\\b"
+								}
+							],
 							"end": "(?=$)"
 						},
 						{
@@ -104,6 +114,12 @@
 									"name": "punctuation.definition.comment.hexa"
 								}
 							},
+							"patterns": [
+								{
+									"name": "keyword.declaration.hexa",
+									"match": "\\b(TODO)\\b"
+								}
+							],
 							"end": "(?=$)"
 						}
 					]
