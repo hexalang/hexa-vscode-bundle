@@ -32,6 +32,10 @@ class HexaLinter {
 
     lintChange(documentChange) {
         const document = documentChange.document
+        this.lintDocument(document)
+    }
+
+    lintDocument(document) {
         if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
             return
         }
@@ -98,6 +102,10 @@ class HexaLinter {
     }
 
     lint(document) {
+        this.lintDocument(document)
+    }
+
+    lintCli(document) {
         if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
             return
         }
