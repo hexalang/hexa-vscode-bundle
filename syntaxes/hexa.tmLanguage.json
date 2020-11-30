@@ -42,7 +42,7 @@
 		},
 		{
 			"name": "storage.attribute.hexa",
-			"match": "@[a-zA-Z]\\w*"
+			"match": "@[a-z_][a-zA-Z_0-9]*\\b"
 		},
 		{
 			"include": "#comment"

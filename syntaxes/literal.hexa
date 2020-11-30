@@ -7,10 +7,28 @@ function hehe() {
 AAAzzz
 Az
 A
+A1
+A_
 AZ
+AZ1_
 
+@a
+@_
+@_a
+@a1_
+@a_1a
+@aa_1a,dfsdf
+@aa_1a dfsdf
+@as
+@asA
+@aA
+@a9
+@asd
 @asdsa // valid
 @ASDSA // invalid
+@фыва // invalid
+@abcфыва // invalid
+
 #if|#else|#end|#elseif
 #if #else #end #elseif
 #if#else#end#elseif
