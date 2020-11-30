@@ -45,6 +45,18 @@ class HexaLinter {
         console.log("[Hexa-Lint] Compiler executed.")
         this.diagnostics.delete(document.uri)
 
+        let buffer = ''
+        let dataHandler = (data) => {
+            buffer += data
+        }
+        let ended = 0
+        let endHandler = () => {
+            ended++
+            if (ended == 2) {
+                eventHandler(buffer)
+            }
+        }
+
         let eventHandler = (data) => {
             console.log("[Hexa-Lint] Handled data.", data)
 
@@ -101,10 +113,12 @@ class HexaLinter {
             this.diagnostics.set(entries)
         }
 
-        linter.stderr.on('data', eventHandler);
+        linter.stderr.on('data', dataHandler);
+        linter.stderr.on('end', endHandler);
 
         // Wait for linter to return the report
-        linter.stdout.on('data', eventHandler)
+        linter.stdout.on('data', dataHandler)
+        linter.stdout.on('end', endHandler);
     }
 
     clear(document) {
