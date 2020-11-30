@@ -9,10 +9,10 @@ exports.activate = function (context) {
     console.log("[Hexa-Lint] Initialized.")
 
     const workspace = vscode.workspace
-    workspace.onDidChangeConfiguration(linter.updateConfig())
+    workspace.onDidChangeConfiguration(config => { linter.updateConfig(config) })
     workspace.textDocuments.forEach((document) => { linter.lint(document) })
     workspace.onDidOpenTextDocument((document) => { linter.lint(document) })
     workspace.onDidSaveTextDocument((document) => { linter.lint(document) })
     workspace.onDidCloseTextDocument((document) => { linter.clear(document) })
-    workspace.onDidChangeTextDocument((document) => { linter.lint(document) })
+    workspace.onDidChangeTextDocument((document) => { linter.lintChange(document) })
 }

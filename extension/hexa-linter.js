@@ -16,6 +16,14 @@ class HexaLinter {
         this.updateConfig()
     }
 
+    lintChange(documentChange) {
+        const document = documentChange.document
+        if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
+            return
+        }
+
+    }
+
     lint(document) {
         if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
             return
