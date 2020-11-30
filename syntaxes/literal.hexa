@@ -1,0 +1,102 @@
+fun hehe() {}
+funz hehe() {}
+function hehe() {
+
+}
+
+AAAzzz
+Az
+A
+AZ
+
+@asdsa // valid
+@ASDSA // invalid
+#if|#else|#end|#elseif
+#if #else #end #elseif
+#if#else#end#elseif
+
+#end sdfsd
+#end #end #end
+
+not and or / \ b
+
+// literal-number
+0
+-0u8
+123
+0i32
+0u32
+0u16
+0u8
+0u64
+// invalid
+00123
+
+123n
+0x123n
+0xFFFFFF
+// literal-hexadecimal
+0xFF
+0x123
+0xFFi64
+0xFFi32
+0xFFu16
+0xFFu8
+// invalid
+0xFF000000u32
+// literal-float
+0.1
+0.123
+0.123f32
+0.123f16
+0.13
+1.13
+// invalid
+
+// invalid
+123u
+123i
+0xFFi66
+123u345
+123f32
+0xFFui6
+0xi343
+0.123f3245
+0.123f64
+0.123i16 // . is not highligthed
+0.123f3
+0.123f12
+0.123f1632
+00.13
+
+//TODO
+// TODO
+// TODO text
+///TODO
+/// TODO
+/// TODO text
+TODO sd
+TODOs
+/* fgg
+f /* fgff
+lllg */ fd TODO hehe
+kkkdf  /*TODO/*k TODO
+k
+TODO
+f*/d*/ fgfk
+k
+fk
+
+kk
+g k
+
+k
+k
+kk
+kk
+
+k
+k
+k
+k*/
+gjgh /* h jh*/  jhh hj hj/* hj /* hjh */ hjh */ jhjh
