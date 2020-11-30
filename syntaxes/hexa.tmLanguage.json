@@ -255,7 +255,7 @@
 		},
 		"operator-character": {
 			"name": "keyword.operator.hexa",
-			"match": "[\\/=\\-+!*%<>&|^~,\\?:\\[\\]]"
+			"match": "[\\\\\\/=\\-+!*%<>&|^~,\\?:\\[\\]]"
 		},
 		"quoted-text": {
 			"patterns": [
