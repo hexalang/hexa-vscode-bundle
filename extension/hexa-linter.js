@@ -1,6 +1,20 @@
 const childProcess = require('child_process')
 const vscode = require('vscode')
 
+const http = require('http')
+const fs = require('fs')
+const path = require('path')
+const url = require('url')
+
+const port = 3978
+
+const options = {
+    hostname: 'localhost',
+    port,
+    path: '/',
+    method: 'POST',
+    headers: {}
+}
 
 function getWord(line, col) {
     let subline = line.substr(col, line.length - col);
@@ -22,6 +36,65 @@ class HexaLinter {
             return
         }
 
+        const fullText = document.getText()
+
+        const command = {
+            kind: 'GetWholeFileSyntaxErrors',
+            payload: fullText
+        }
+
+        const req = http.request(options, res => {
+            const chunks = [] // TODO use Buffer
+
+            res.on('data', chunk => {
+                chunks.push(chunk.toString())
+            })
+
+            res.on('end', () => {
+                const json = JSON.parse(chunks.join('').trim())
+
+                {
+                    // Parse the report
+                    let entries = []
+                    // Parse offenses for the file
+                    let diagnostics = []
+                    for (const msg of json) {
+                        try {
+                            let parsed = {
+                                line: msg.line - 1, //Number(match[2]) - 1,
+                                col: msg.column, //Number(match[3]), // FIXME // TODO
+                                msgtext: msg.details //match[4]
+                            }
+
+                            let lineindoc = document.lineAt(parsed.line);
+
+                            let errorWord = getWord(lineindoc.text, parsed.col);
+
+                            let range = new vscode.Range(
+                                parsed.line, parsed.col,
+                                parsed.line, parsed.col + errorWord.length
+                            )
+
+                            let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
+                            diagnostics.push(diagnostic)
+                        }
+                        catch (err) {
+                            console.log(err);
+                        }
+                    }
+                    entries.push([document.uri, diagnostics])
+                    this.diagnostics.set(entries)
+                }
+            })
+        })
+
+        req.on('error', error => {
+            console.error(error)
+            alert('Cannot get json: ' + error.message)
+        })
+
+        req.write(JSON.stringify([command]))
+        req.end()
     }
 
     lint(document) {
