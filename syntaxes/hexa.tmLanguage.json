@@ -30,7 +30,7 @@
 		},
 		{
 			"name": "support.type.hexa",
-			"match": "\\b([A-Z][A-z_0-9]*)\\b"
+			"match": "\\b([A-Z][A-Za-z_0-9]*)\\b"
 		},
 		{
 			"name": "keyword.expressions-and-types.hexa",
