@@ -18,11 +18,11 @@
 		},
 		{
 			"name": "storage.type.hexa",
-			"match": "\\b(module|class|interface|enum|let|var|fun)\\b"
+			"match": "\\b(class|interface|enum|let|var|fun)\\b"
 		},
 		{
 			"name": "storage.modifier.hexa",
-			"match": "\\b(export|private|static)\\b"
+			"match": "\\b(import|private|static)\\b"
 		},
 		{
 			"name": "keyword.statement.hexa",
