@@ -51,11 +51,18 @@ class HexaLinter {
             const chunks = [] // TODO use Buffer
 
             res.on('data', chunk => {
-                chunks.push(chunk.toString())
+                chunks.push(chunk)
             })
 
             res.on('end', () => {
-                const json = JSON.parse(chunks.join('').trim())
+                let json = []
+                const sourceJson = Buffer.concat(chunks).toString()
+                try {
+                    json = JSON.parse(sourceJson)
+                } catch (e) {
+                    console.error(e)
+                    console.error('sourceJson:', sourceJson)
+                }
 
                 {
                     // Parse the report
@@ -120,7 +127,7 @@ class HexaLinter {
 
         // Asynchronously run Hexa syntax linter
         let linter = childProcess.exec(
-            `${path} --syntax-linter ${document.fileName}`,
+            `${path} syntax-linter ${document.fileName}`,
             { 'cwd': vscode.workspace.rootPath } // Current working directory
         )
         console.log("[Hexa-Lint] Compiler executed.")
