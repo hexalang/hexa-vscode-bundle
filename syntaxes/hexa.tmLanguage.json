@@ -55,6 +55,29 @@
 		}
 	],
 	"repository": {
+		"comment-markup": {
+			"patterns": [
+				{
+					"name": "keyword.declaration.hexa",
+					"match": "\\b(TODO|NOTE)\\b"
+				},
+				{
+					"name": "constant.language.hexa",
+					"begin": "`",
+					"beginCaptures": {
+						"0": {
+							"name": "constant.language.hexa"
+						}
+					},
+					"end": "`",
+					"endCaptures": {
+						"0": {
+							"name": "constant.language.hexa"
+						}
+					}
+				}
+			]
+		},
 		"comment": {
 			"patterns": [
 				{
@@ -73,8 +96,7 @@
 					},
 					"patterns": [
 						{
-							"name": "keyword.declaration.hexa",
-							"match": "\\b(TODO)\\b"
+							"include": "#comment-markup"
 						},
 						{
 							"include": "#comment"
@@ -100,14 +122,13 @@
 							},
 							"patterns": [
 								{
-									"name": "keyword.declaration.hexa",
-									"match": "\\b(TODO)\\b"
+									"include": "#comment-markup"
 								}
 							],
 							"end": "(?=$)"
 						},
 						{
-							"name": "comment.line.double-slash.cs",
+							"name": "comment.line.double-slash.hexa",
 							"begin": "(?<!/)//(?:(?!/)|(?=//))",
 							"beginCaptures": {
 								"0": {
@@ -116,8 +137,7 @@
 							},
 							"patterns": [
 								{
-									"name": "keyword.declaration.hexa",
-									"match": "\\b(TODO)\\b"
+									"include": "#comment-markup"
 								}
 							],
 							"end": "(?=$)"
