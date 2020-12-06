@@ -8,6 +8,8 @@ const url = require('url')
 
 const port = 3978
 
+const decorationType = vscode.window.createTextEditorDecorationType({ after: { margin: '0 0 0 1rem' } });
+
 const options = {
     hostname: 'localhost',
     port,
@@ -42,10 +44,18 @@ class HexaLinter {
 
         const fullText = document.getText()
 
-        const command = {
+        const commandFindProjectFile = {
+            kind: 'FindProjectFile',
+            payload: document.uri.fsPath
+        }
+
+        const commandGetWholeFileSyntaxErrors = {
             kind: 'GetWholeFileSyntaxErrors',
             payload: fullText
         }
+
+
+        const commands = [commandFindProjectFile, commandGetWholeFileSyntaxErrors]
 
         const req = http.request(options, res => {
             const chunks = [] // TODO use Buffer
@@ -67,9 +77,14 @@ class HexaLinter {
                 {
                     // Parse the report
                     let entries = []
+                    const decorationsArray = []
+                    const openEditor = vscode.window.visibleTextEditors.filter(
+                        editor => editor.document.uri === document.uri
+                    )[0]
+
                     // Parse offenses for the file
                     let diagnostics = []
-                    for (const msg of json) {
+                    for (const msg of json[1]) {
                         try {
                             let parsed = {
                                 line: msg.line - 1, //Number(match[2]) - 1,
@@ -88,11 +103,23 @@ class HexaLinter {
 
                             let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
                             diagnostics.push(diagnostic)
+
+                            const line = parsed.line
+                            decorationsArray.push({
+                                renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
+                                range: new vscode.Range(new vscode.Position(line, 1024), new vscode.Position(line, 1024))
+                            })
                         }
                         catch (err) {
                             console.log(err);
                         }
                     }
+
+                    if (openEditor) {
+                        openEditor.setDecorations(decorationType, decorationsArray)
+                    } else {
+                    }
+
                     entries.push([document.uri, diagnostics])
                     this.diagnostics.set(entries)
                 }
@@ -104,7 +131,7 @@ class HexaLinter {
             alert('Cannot get json: ' + error.message)
         })
 
-        req.write(JSON.stringify([command]))
+        req.write(JSON.stringify(commands))
         req.end()
     }
 
