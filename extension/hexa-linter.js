@@ -214,6 +214,9 @@ class HexaLinter {
                                 msgtext: msg.details //match[4]
                             }
 
+                            if (parsed.col < 0) parsed.col = 0
+                            if (parsed.line < 0) parsed.line = 0
+
                             let lineindoc = info.document.lineAt(parsed.line)
 
                             let errorWord = getWord(lineindoc.text, parsed.col)
