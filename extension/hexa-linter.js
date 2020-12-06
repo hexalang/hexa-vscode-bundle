@@ -8,7 +8,7 @@ const url = require('url')
 
 const port = 3978
 
-const decorationType = vscode.window.createTextEditorDecorationType({ after: { margin: '0 0 0 1rem' } });
+const decorationType = vscode.window.createTextEditorDecorationType({ after: { margin: '0 0 0 1rem' } })
 
 const options = {
     hostname: 'localhost',
@@ -19,11 +19,11 @@ const options = {
 }
 
 function getWord(line, col) {
-    let subline = line.substr(col, line.length - col);
+    let subline = line.substr(col, line.length - col)
 
     let word = subline.split("(")[0].split(" ")[0].split(",")[0].split(")")[0].split(".")[0]
 
-    return word;
+    return word
 }
 
 class HexaLinter {
@@ -145,7 +145,7 @@ class HexaLinter {
 
                             let lineindoc = document.lineAt(parsed.line);
 
-                            let errorWord = getWord(lineindoc.text, parsed.col);
+                            let errorWord = getWord(lineindoc.text, parsed.col)
 
                             let range = new vscode.Range(
                                 parsed.line, parsed.col,
@@ -162,7 +162,7 @@ class HexaLinter {
                             })
                         }
                         catch (err) {
-                            console.log(err);
+                            console.log(err)
                         }
                     }
 
@@ -239,9 +239,9 @@ class HexaLinter {
                                 msgtext: msg.details //match[4]
                             }
 
-                            let lineindoc = document.lineAt(parsed.line);
+                            let lineindoc = document.lineAt(parsed.line)
 
-                            let errorWord = getWord(lineindoc.text, parsed.col);
+                            let errorWord = getWord(lineindoc.text, parsed.col)
 
                             let range = new vscode.Range(
                                 parsed.line, parsed.col,
@@ -258,7 +258,7 @@ class HexaLinter {
                             })
                         }
                         catch (err) {
-                            console.log(err);
+                            console.log(err)
                         }
                     }
 
@@ -322,7 +322,7 @@ class HexaLinter {
         let eventHandler = (data) => {
             console.log("[Hexa-Lint] Handled data.", data)
 
-            let msgs = data.split("\n");
+            let msgs = data.split("\n")
             console.log(`[Hexa-Lint] Got ${msgs.length} data lines.`)
 
             // Parse the report
@@ -350,11 +350,11 @@ class HexaLinter {
 
                     console.log(`[Hexa-Lint] Compiler message parsed successfully.`, parsed)
 
-                    let lineindoc = document.lineAt(parsed.line);
+                    let lineindoc = document.lineAt(parsed.line)
 
                     console.log(`[Hexa-Lint] Got needed line from document.`, lineindoc)
 
-                    let errorWord = getWord(lineindoc.text, parsed.col);
+                    let errorWord = getWord(lineindoc.text, parsed.col)
                     console.log(`[Hexa-Lint] Word found.`, errorWord)
 
                     let range = new vscode.Range(
@@ -367,7 +367,7 @@ class HexaLinter {
                     diagnostics.push(diagnostic)
                 }
                 catch (err) {
-                    console.log(err);
+                    console.log(err)
                 }
             }
             console.log(`[Hexa-Lint] Got ${entries.length} entries of diagnostic.`)
@@ -375,12 +375,12 @@ class HexaLinter {
             this.diagnostics.set(entries)
         }
 
-        linter.stderr.on('data', dataHandler);
-        linter.stderr.on('end', endHandler);
+        linter.stderr.on('data', dataHandler)
+        linter.stderr.on('end', endHandler)
 
         // Wait for linter to return the report
         linter.stdout.on('data', dataHandler)
-        linter.stdout.on('end', endHandler);
+        linter.stdout.on('end', endHandler)
     }
 
     clear(document) {
