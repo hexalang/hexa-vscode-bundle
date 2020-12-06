@@ -125,10 +125,23 @@ class HexaLinter {
                     // Parse the report
                     const map = new Map()
                     // Parse offenses for the file
+                    const projectMessages = []
 
                     for (const msg of json[1]) {
                         try {
                             let info = map.get(msg.fileName)
+
+                            if (msg.fileName == 'hexa.json') {
+
+                                if (projectMessages.includes(msg.details)) continue
+
+                                projectMessages.push(msg.details)
+                                vscode.window.showErrorMessage(
+                                    msg.details
+                                )
+
+                                continue
+                            }
 
                             if (info == null) {
                                 const editor = vscode.window.visibleTextEditors.filter(
