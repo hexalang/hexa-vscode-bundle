@@ -13,6 +13,10 @@ exports.activate = function (context) {
     workspace.textDocuments.forEach((document) => { linter.lint(document) })
     workspace.onDidOpenTextDocument((document) => { linter.lint(document) })
     workspace.onDidSaveTextDocument((document) => { linter.lint(document) })
-    workspace.onDidCloseTextDocument((document) => { linter.clear(document) })
     workspace.onDidChangeTextDocument((document) => { linter.lintChange(document) })
+
+    // Discard cache
+    workspace.onDidDeleteFiles((event) => { linter.onDidDeleteFiles(event) })
+    workspace.onDidCloseTextDocument((document) => { linter.onDidCloseTextDocument(document) })
+    workspace.onDidRenameFiles((event) => { linter.onDidRenameFiles(event) })
 }

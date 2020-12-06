@@ -37,7 +37,155 @@ class HexaLinter {
         this.lintDocument(document)
     }
 
+    discard(fsPath) {
+        const commandDiscardFileContents = {
+            kind: 'DiscardFileContents',
+            payload: { fsPath }
+        }
+
+        const commands = [commandDiscardFileContents]
+
+        const req = http.request(options, res => {
+        })
+
+        req.on('error', error => {
+            console.error(error)
+            console.error('Cannot get json: ' + error.message)
+        })
+
+        req.write(JSON.stringify(commands))
+        req.end()
+    }
+
+    onDidRenameFiles(event) {
+        for (const file of event.files) {
+            this.discard(file.oldUri.fsPath)
+        }
+    }
+
+    onDidCloseTextDocument(document) {
+        if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
+            return
+        }
+
+        this.clear(document)
+        this.discard(document.uri.fsPath)
+    }
+
+    onDidDeleteFiles(event) {
+        for (const uri of event.files) {
+            this.discard(uri.fsPath)
+        }
+    }
+
     lintDocument(document) {
+        if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
+            return
+        }
+
+        const resolved = path.resolve(document.uri.fsPath)
+        const fullText = document.getText()
+        const fsPath = document.uri.fsPath
+
+        const commandSyncFileContents = {
+            kind: 'SyncFileContents',
+            payload: {
+                fsPath,
+                content: fullText
+            }
+        }
+
+        const commandAutocheckProject = {
+            kind: 'AutocheckProject',
+            payload: { fsPath }
+        }
+
+        const commands = [commandSyncFileContents, commandAutocheckProject]
+
+        const req = http.request(options, res => {
+            const chunks = [] // TODO use Buffer
+
+            res.on('data', chunk => {
+                chunks.push(chunk)
+            })
+
+            res.on('end', () => {
+                let json = []
+                const sourceJson = Buffer.concat(chunks).toString()
+                try {
+                    json = JSON.parse(sourceJson)
+                } catch (e) {
+                    console.error(e)
+                    console.error('sourceJson:', sourceJson)
+                }
+
+                {
+                    // Parse the report
+                    let entries = []
+                    const decorationsArray = []
+                    const openEditor = vscode.window.visibleTextEditors.filter(
+                        editor => editor.document.uri === document.uri
+                    )[0]
+
+                    this.entries_ = entries
+                    // Parse offenses for the file
+                    let diagnostics = []
+
+                    for (const msg of json[1]) {
+                        try {
+                            if (resolved != path.resolve(msg.fileName)) {
+                                continue
+                            }
+
+                            let parsed = {
+                                line: msg.line - 1, //Number(match[2]) - 1,
+                                col: msg.column, //Number(match[3]), // FIXME // TODO
+                                msgtext: msg.details //match[4]
+                            }
+
+                            let lineindoc = document.lineAt(parsed.line);
+
+                            let errorWord = getWord(lineindoc.text, parsed.col);
+
+                            let range = new vscode.Range(
+                                parsed.line, parsed.col,
+                                parsed.line, parsed.col + errorWord.length
+                            )
+
+                            let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
+                            diagnostics.push(diagnostic)
+
+                            const line = parsed.line
+                            decorationsArray.push({
+                                renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
+                                range: new vscode.Range(new vscode.Position(line, 1024), new vscode.Position(line, 1024))
+                            })
+                        }
+                        catch (err) {
+                            console.log(err);
+                        }
+                    }
+
+                    if (openEditor) {
+                        openEditor.setDecorations(decorationType, decorationsArray)
+                    } else {
+                    }
+
+                    entries.push([document.uri, diagnostics])
+                    this.diagnostics.set(entries)
+                }
+            })
+        })
+
+        req.on('error', error => {
+            console.error('Cannot get json: ' + error.message)
+        })
+
+        req.write(JSON.stringify(commands))
+        req.end()
+    }
+
+    lintDocumentLegacy(document) {
         if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
             return
         }
@@ -53,7 +201,6 @@ class HexaLinter {
             kind: 'GetWholeFileSyntaxErrors',
             payload: fullText
         }
-
 
         const commands = [commandFindProjectFile, commandGetWholeFileSyntaxErrors]
 
@@ -128,7 +275,7 @@ class HexaLinter {
 
         req.on('error', error => {
             console.error(error)
-            alert('Cannot get json: ' + error.message)
+            console.error('Cannot get json: ' + error.message)
         })
 
         req.write(JSON.stringify(commands))
