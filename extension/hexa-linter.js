@@ -192,6 +192,7 @@ class HexaLinter {
 
                                 if (!this.files.has(msg.fileName)) {
                                     this.files.set(msg.fileName, {
+                                        document,
                                         editor
                                     })
                                 }
