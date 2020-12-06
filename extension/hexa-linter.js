@@ -134,8 +134,8 @@ class HexaLinter {
                             if (msg.fileName == 'hexa.json') {
 
                                 if (projectMessages.includes(msg.details)) continue
-
                                 projectMessages.push(msg.details)
+
                                 vscode.window.showErrorMessage(
                                     msg.details
                                 )
@@ -144,11 +144,32 @@ class HexaLinter {
                             }
 
                             if (info == null) {
+                                const fileName = path.resolve(msg.fileName)
+
                                 const editor = vscode.window.visibleTextEditors.filter(
-                                    editor => path.resolve(editor.document.uri.fsPath) === path.resolve(msg.fileName)
+                                    editor => path.resolve(editor.document.uri.fsPath) === fileName
                                 )[0]
 
                                 if (editor == null) {
+                                    const basename = path.basename(fileName)
+                                    const button = 'Open ' + basename
+                                    const text = 'You have errors in the `' + basename + '`'
+                                    if (projectMessages.includes(text)) continue
+                                    projectMessages.push(text)
+
+                                    vscode.window
+                                        .showWarningMessage(text, button)
+                                        .then(selection => {
+                                            if (selection == button) {
+                                                var openPath = vscode.Uri.file(fileName)
+                                                vscode.workspace.openTextDocument(openPath).then(doc => {
+                                                    vscode.window.showTextDocument(doc).then(editor => {
+                                                        this.lintDocument(doc)
+                                                    })
+                                                })
+                                            }
+                                        })
+
                                     continue
                                 }
 
