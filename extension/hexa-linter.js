@@ -131,14 +131,24 @@ class HexaLinter {
                         try {
                             let info = map.get(msg.fileName)
 
-                            if (msg.fileName == 'hexa.json') {
+                            if (msg.fileName.endsWith('hexa.json')) {
+                                const fileName = path.resolve(msg.fileName)
 
                                 if (projectMessages.includes(msg.details)) continue
                                 projectMessages.push(msg.details)
 
-                                vscode.window.showErrorMessage(
-                                    msg.details
-                                )
+                                const button = 'Open hexa.json'
+                                vscode.window
+                                    .showErrorMessage(msg.details, button)
+                                    .then(selection => {
+                                        if (selection == button) {
+                                            var openPath = vscode.Uri.file(fileName)
+                                            vscode.workspace.openTextDocument(openPath).then(doc => {
+                                                vscode.window.showTextDocument(doc).then(editor => {
+                                                })
+                                            })
+                                        }
+                                    })
 
                                 continue
                             }
