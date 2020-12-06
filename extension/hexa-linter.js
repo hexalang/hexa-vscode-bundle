@@ -29,6 +29,7 @@ function getWord(line, col) {
 class HexaLinter {
     constructor(diagnostics) {
         this.diagnostics = diagnostics
+        this.files = new Map()
         this.updateConfig()
     }
 
@@ -55,6 +56,8 @@ class HexaLinter {
 
         req.write(JSON.stringify(commands))
         req.end()
+
+        // TODO this.files.delete
     }
 
     onDidRenameFiles(event) {
@@ -83,7 +86,6 @@ class HexaLinter {
             return
         }
 
-        const resolved = path.resolve(document.uri.fsPath)
         const fullText = document.getText()
         const fsPath = document.uri.fsPath
 
@@ -121,20 +123,35 @@ class HexaLinter {
 
                 {
                     // Parse the report
-                    let entries = []
-                    const decorationsArray = []
-                    const openEditor = vscode.window.visibleTextEditors.filter(
-                        editor => editor.document.uri === document.uri
-                    )[0]
-
-                    this.entries_ = entries
+                    const map = new Map()
                     // Parse offenses for the file
-                    let diagnostics = []
 
                     for (const msg of json[1]) {
                         try {
-                            if (resolved != path.resolve(msg.fileName)) {
-                                continue
+                            let info = map.get(msg.fileName)
+
+                            if (info == null) {
+                                const editor = vscode.window.visibleTextEditors.filter(
+                                    editor => path.resolve(editor.document.uri.fsPath) === path.resolve(msg.fileName)
+                                )[0]
+
+                                if (editor == null) {
+                                    continue
+                                }
+
+                                info = {
+                                    editor,
+                                    decorations: [],
+                                    diagnostics: []
+                                }
+
+                                map.set(msg.fileName, info)
+
+                                if (!this.files.has(msg.fileName)) {
+                                    this.files.set(msg.fileName, {
+                                        editor
+                                    })
+                                }
                             }
 
                             let parsed = {
@@ -143,7 +160,7 @@ class HexaLinter {
                                 msgtext: msg.details //match[4]
                             }
 
-                            let lineindoc = document.lineAt(parsed.line);
+                            let lineindoc = info.editor.document.lineAt(parsed.line)
 
                             let errorWord = getWord(lineindoc.text, parsed.col)
 
@@ -153,10 +170,10 @@ class HexaLinter {
                             )
 
                             let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
-                            diagnostics.push(diagnostic)
+                            info.diagnostics.push(diagnostic)
 
                             const line = parsed.line
-                            decorationsArray.push({
+                            info.decorations.push({
                                 renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
                                 range: new vscode.Range(new vscode.Position(line, 1024), new vscode.Position(line, 1024))
                             })
@@ -166,12 +183,22 @@ class HexaLinter {
                         }
                     }
 
-                    if (openEditor) {
-                        openEditor.setDecorations(decorationType, decorationsArray)
-                    } else {
+                    const entries = []
+
+                    for (const key of map.keys()) {
+                        const info = map.get(key)
+                        entries.push([info.editor.document.uri, info.diagnostics])
+                        info.editor.setDecorations(decorationType, info.decorations)
                     }
 
-                    entries.push([document.uri, diagnostics])
+                    for (const key of this.files.keys()) {
+                        if (!map.has(key)) {
+                            const info = this.files.get(key)
+                            entries.push([info.editor.document.uri, []])
+                            info.editor.setDecorations(decorationType, [])
+                        }
+                    }
+
                     this.diagnostics.set(entries)
                 }
             })
