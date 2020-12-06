@@ -150,14 +150,22 @@ class HexaLinter {
                                     editor => path.resolve(editor.document.uri.fsPath) === fileName
                                 )[0]
 
-                                if (editor == null) {
+                                const document = editor ? editor.document : vscode.workspace.textDocuments.filter(
+                                    document => path.resolve(document.fileName) === fileName
+                                )[0]
+
+                                if (editor == null && document == null) {
+                                    let showAlert = true
+
                                     const basename = path.basename(fileName)
                                     const button = 'Open ' + basename
                                     const text = 'You have errors in the `' + basename + '`'
-                                    if (projectMessages.includes(text)) continue
+                                    if (projectMessages.includes(text)) {
+                                        showAlert = false
+                                    }
                                     projectMessages.push(text)
 
-                                    vscode.window
+                                    if (showAlert) vscode.window
                                         .showWarningMessage(text, button)
                                         .then(selection => {
                                             if (selection == button) {
@@ -174,6 +182,7 @@ class HexaLinter {
                                 }
 
                                 info = {
+                                    document,
                                     editor,
                                     decorations: [],
                                     diagnostics: []
@@ -194,7 +203,7 @@ class HexaLinter {
                                 msgtext: msg.details //match[4]
                             }
 
-                            let lineindoc = info.editor.document.lineAt(parsed.line)
+                            let lineindoc = info.document.lineAt(parsed.line)
 
                             let errorWord = getWord(lineindoc.text, parsed.col)
 
@@ -221,15 +230,15 @@ class HexaLinter {
 
                     for (const key of map.keys()) {
                         const info = map.get(key)
-                        entries.push([info.editor.document.uri, info.diagnostics])
-                        info.editor.setDecorations(decorationType, info.decorations)
+                        if (info.document) entries.push([info.document.uri, info.diagnostics])
+                        if (info.editor) info.editor.setDecorations(decorationType, info.decorations)
                     }
 
                     for (const key of this.files.keys()) {
                         if (!map.has(key)) {
                             const info = this.files.get(key)
-                            entries.push([info.editor.document.uri, []])
-                            info.editor.setDecorations(decorationType, [])
+                            if (info.document) entries.push([info.document.uri, []])
+                            if (info.editor) info.editor.setDecorations(decorationType, [])
                         }
                     }
 
