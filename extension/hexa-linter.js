@@ -81,8 +81,90 @@ class HexaLinter {
         }
     }
 
+    lintUnsaved(document) {
+        const fullText = document.getText()
+        const commandGetWholeFileSyntaxErrors = {
+            kind: 'GetWholeFileSyntaxErrors',
+            payload: fullText
+        }
+        const commands = [commandGetWholeFileSyntaxErrors]
+
+        const req = http.request(options, res => {
+            const chunks = []
+
+            res.on('data', chunk => {
+                chunks.push(chunk)
+            })
+
+            res.on('end', () => {
+                let json = []
+                const sourceJson = Buffer.concat(chunks).toString()
+                try {
+                    json = JSON.parse(sourceJson)
+                } catch (e) {
+                    console.error(e)
+                    console.error('sourceJson:', sourceJson)
+                }
+
+                {
+                    // Parse the report
+                    const decorationsArray = []
+                    const openEditor = vscode.window.visibleTextEditors.filter(
+                        editor => editor.document.uri === document.uri
+                    )[0]
+
+                    // Parse offenses for the file
+                    let diagnostics = []
+                    for (const msg of json[0]) {
+                        try {
+                            let parsed = {
+                                line: msg.line - 1, //Number(match[2]) - 1,
+                                col: msg.column, //Number(match[3]), // FIXME // TODO
+                                msgtext: msg.details //match[4]
+                            }
+
+                            let lineindoc = document.lineAt(parsed.line)
+
+                            let errorWord = getWord(lineindoc.text, parsed.col)
+
+                            let range = new vscode.Range(
+                                parsed.line, parsed.col,
+                                parsed.line, parsed.col + errorWord.length
+                            )
+
+                            let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
+                            diagnostics.push(diagnostic)
+
+                            const line = parsed.line
+                            decorationsArray.push({
+                                renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
+                                range: new vscode.Range(new vscode.Position(line, 1024), new vscode.Position(line, 1024))
+                            })
+                        }
+                        catch (err) {
+                            console.log(err)
+                        }
+                    }
+
+                    if (openEditor) {
+                        openEditor.setDecorations(decorationType, decorationsArray)
+                    }
+                }
+            })
+        })
+
+        req.on('error', error => {
+            console.error(error)
+            console.error('Cannot get json: ' + error.message)
+        })
+
+        req.write(JSON.stringify(commands))
+        req.end()
+    }
+
     lintDocument(document) {
         if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
+            if (document.languageId == 'hexa') this.lintUnsaved(document)
             return
         }
 
@@ -105,7 +187,7 @@ class HexaLinter {
         const commands = [commandSyncFileContents, commandAutocheckProject]
 
         const req = http.request(options, res => {
-            const chunks = [] // TODO use Buffer
+            const chunks = []
 
             res.on('data', chunk => {
                 chunks.push(chunk)
