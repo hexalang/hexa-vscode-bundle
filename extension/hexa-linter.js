@@ -29,7 +29,7 @@ function getWord(line, col) {
 class HexaLinter {
     constructor(diagnostics) {
         this.diagnostics = diagnostics
-        this.files = new Map()
+        this.files = new Map() // TODO group per-project (reported by server)
         this.updateConfig()
     }
 

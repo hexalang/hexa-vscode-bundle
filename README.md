@@ -7,9 +7,11 @@
 ## Features
 
  - Syntax highlighting
- - Basic linting
+ - Advanced linting via language server
  - Providing snippets
  - Also compatible with [VSCodium](https://vscodium.com/)
+
+![Features](features.png?raw=true)
 
 ## Install
 
