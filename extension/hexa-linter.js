@@ -200,13 +200,9 @@ class HexaLinter {
 
                                 map.set(msg.fileName, info)
 
-                                if (!this.files.has(msg.fileName)) {
-                                    this.files.set(msg.fileName, {
-                                        document,
-                                        editor
-                                    })
-                                }
                             }
+
+                            this.files.set(msg.fileName, info)
 
                             let parsed = {
                                 line: msg.line - 1, //Number(match[2]) - 1,
@@ -252,7 +248,9 @@ class HexaLinter {
                         if (!map.has(key)) {
                             const info = this.files.get(key)
                             if (info.document) entries.push([info.document.uri, []])
-                            if (info.editor) info.editor.setDecorations(decorationType, [])
+                            if (info.editor) {
+                                info.editor.setDecorations(decorationType, [])
+                            }
                         }
                     }
 
