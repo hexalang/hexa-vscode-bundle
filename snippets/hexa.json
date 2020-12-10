@@ -2,23 +2,23 @@
     ".source.hexa": {
         "for (element in array) { }": {
             "prefix": "for",
-            "body": "for (${2:element} in ${1:array}) {\n\t$0\n}"
+            "body": "for ${2:element} in ${1:array} {\n\t$0\n}"
         },
         "if { }": {
             "prefix": "if",
-            "body": "if (${1:condition}) {\n\t$0\n}"
+            "body": "if ${1:condition} {\n\t$0\n}"
         },
         "if (let name = expression) { }": {
             "prefix": "iflet",
-            "body": "if (let ${1:name} = ${2:expression}) {\n\t$0\n}"
+            "body": "if let ${1:name} = ${2:expression} {\n\t$0\n}"
         },
         "if (let name = expression) { } else { }": {
             "prefix": "ifletelse",
-            "body": "if (let ${1:name} = ${2:expression}) {\n\t$0\n} else {\n\t\n}"
+            "body": "if let ${1:name} = ${2:expression} {\n\t$0\n} else {\n\t\n}"
         },
         "if (condition) { } else { }": {
             "prefix": "ifelse",
-            "body": "if (${1:condition}) {\n\t$0\n} else {\n\t\n}"
+            "body": "if ${1:condition} {\n\t$0\n} else {\n\t\n}"
         },
         "let name = new type(arguments)": {
             "prefix": "new",
@@ -26,7 +26,7 @@
         },
         "while(condition) { }": {
             "prefix": "while",
-            "body": "while (${1:condition}) {\n\t$0\n}"
+            "body": "while ${1:condition} {\n\t$0\n}"
         },
         "do { } while(condition)": {
             "prefix": "do",
@@ -38,7 +38,7 @@
         },
         "function": {
             "prefix": "function",
-            "body": "function ${1:name}(${2:params}: ${3:type}) {\n\t$0\n}"
+            "body": "fun ${1:name}(${2:params}: ${3:type}) {\n\t$0\n}"
         },
         "(param: type) => { }": {
             "prefix": "lambda",
@@ -46,11 +46,11 @@
         },
         "return": {
             "prefix": "ret",
-            "body": "return $1;$0"
+            "body": "return $1$0"
         },
         "try { } catch (error) { }": {
             "prefix": "trycatch",
-            "body": "try {\n\t$0\n} catch (${1:error}) {\n\t\n}"
+            "body": "try {\n\t$0\n} catch ${1:error} {\n\t\n}"
         }
     }
 }
