@@ -12,5 +12,9 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "editor.formatOnSave": true,
-    "javascript.format.semicolons": "remove"
+    "editor.renderControlCharacters": true,
+    "javascript.format.semicolons": "remove",
+    "cSpell.words": [
+        "hexa"
+    ]
 }
