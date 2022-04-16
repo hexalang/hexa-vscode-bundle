@@ -74,14 +74,70 @@ exports.activate = function (context) {
         }
     }
 
+    // TODO reuse last success result
+    // TODO what to with unsaved files without fsPath?
+    class HexaDocumentSymbolProvider {
+        // Cache as string, not JSON, to use less memory
+        cache = new Map()
+        // TODO implement cache on the server side
+        // ^ autocomplete by latest successful parsing
+
+        jsonToSymbol(symbol) {
+            console.log({ symbol })
+            const range = new vscode.Range(
+                new vscode.Position(symbol.range.line, symbol.range.start),
+                new vscode.Position(symbol.range.line, symbol.range.end)
+            )
+            return new vscode.DocumentSymbol(
+                symbol.name,
+                symbol.detail,
+                symbol.kind,
+                range,
+                range
+            )
+        }
+
+        provideDocumentSymbols(
+            document, // vscode.TextDocument
+            token // vscode.CancellationToken
+        )
+        // Promise<vscode.DocumentSymbol[]>
+        {
+            const reuse = false
+            const commands = reuse ? [] : [linter.documentSymbolProvider(document.uri.fsPath)]
+            return new Promise((resolve, reject) => {
+                linter.request(commands,
+                    onJSON => {
+                        if (onJSON[0].fail) {
+                            // TODO reuse & SyncFileContents
+                            resolve([])
+                        } else {
+                            const symbols = onJSON[0].map(symbol => {
+                                const result = this.jsonToSymbol(symbol)
+
+                                if (symbol.children && symbol.children.length > 0) {
+                                    symbol.children.forEach(child => result.children.push(this.jsonToSymbol(child)))
+                                }
+
+                                return result
+                            })
+                            resolve(symbols)
+                        }
+                    },
+                    onError => {
+                        // TODO reuse
+                        resolve([])
+                    })
+            })
+        }
+    }
+
     const providerSymbol = vscode.languages.registerDocumentSymbolProvider(
         sel,
-        new HexaConfigDocumentSymbolProvider()
+        new HexaDocumentSymbolProvider()
     )
 
     context.subscriptions.push(
-        provider2,
-        provider1,
         providerSymbol
     )
 }

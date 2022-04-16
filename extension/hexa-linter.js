@@ -1,5 +1,15 @@
+"use strict"
+
 const childProcess = require('child_process')
-const vscode = require('vscode')
+const {
+    window,
+    Range,
+    Diagnostic,
+    DiagnosticSeverity,
+    Position,
+    Uri,
+    workspace
+} = require('vscode')
 
 const http = require('http')
 const fs = require('fs')
@@ -8,7 +18,7 @@ const url = require('url')
 
 const port = 3978
 
-const decorationType = vscode.window.createTextEditorDecorationType({ after: { margin: '0 0 0 1rem' } })
+const decorationType = window.createTextEditorDecorationType({ after: { margin: '0 0 0 1rem' } })
 
 const options = {
     hostname: 'localhost',
@@ -109,7 +119,7 @@ class HexaLinter {
                 {
                     // Parse the report
                     const decorationsArray = []
-                    const openEditor = vscode.window.visibleTextEditors.filter(
+                    const openEditor = window.visibleTextEditors.filter(
                         editor => editor.document.uri === document.uri
                     )[0]
 
@@ -127,18 +137,18 @@ class HexaLinter {
 
                             let errorWord = getWord(lineindoc.text, parsed.col)
 
-                            let range = new vscode.Range(
+                            let range = new Range(
                                 parsed.line, parsed.col,
                                 parsed.line, parsed.col + errorWord.length
                             )
 
-                            let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
+                            let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
                             diagnostics.push(diagnostic)
 
                             const line = parsed.line
                             decorationsArray.push({
                                 renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
-                                range: new vscode.Range(new vscode.Position(line, 1024), new vscode.Position(line, 1024))
+                                range: new Range(new Position(line, 1024), new Position(line, 1024))
                             })
                         }
                         catch (err) {
@@ -162,6 +172,53 @@ class HexaLinter {
         req.end()
     }
 
+    // TODO all commands to separate shared module
+    syncFileContents(fsPath, fullText) {
+        return {
+            // TODO kind from string to const integer for speed
+            kind: 'SyncFileContents',
+            payload: {
+                fsPath,
+                content: fullText
+            }
+        }
+    }
+
+    documentSymbolProvider(fsPath) {
+        return {
+            kind: 'DocumentSymbolProvider',
+            payload: {
+                fsPath,
+            }
+        }
+    }
+
+    request(commands, onJSON, onError) {
+        const req = http.request(options, res => {
+            const chunks = []
+
+            res.on('data', chunk => {
+                chunks.push(chunk)
+            })
+
+            res.on('end', () => {
+                const sourceJson = Buffer.concat(chunks).toString()
+                try {
+                    onJSON(JSON.parse(sourceJson))
+                } catch (e) {
+                    onError(e)
+                }
+            })
+        })
+
+        req.on('error', error => {
+            console.error('Cannot get json: ' + error.message)
+        })
+
+        req.write(JSON.stringify(commands))
+        req.end()
+    }
+
     lintDocument(document) {
         if (document.languageId !== 'hexa' || document.isUntitled || document.uri.scheme !== 'file') {
             if (document.languageId == 'hexa') this.lintUnsaved(document)
@@ -171,13 +228,14 @@ class HexaLinter {
         const fullText = document.getText()
         const fsPath = document.uri.fsPath
 
-        const commandSyncFileContents = {
+        const commandSyncFileContents = this.syncFileContents(fsPath, fullText)
+        /*{
             kind: 'SyncFileContents',
             payload: {
                 fsPath,
                 content: fullText
             }
-        }
+        }*/
 
         const commandAutocheckProject = {
             kind: 'AutocheckProject',
@@ -220,13 +278,13 @@ class HexaLinter {
                                 projectMessages.push(msg.details)
 
                                 const button = 'Open hexa.json'
-                                vscode.window
+                                window
                                     .showErrorMessage(msg.details, button)
                                     .then(selection => {
                                         if (selection == button) {
-                                            var openPath = vscode.Uri.file(fileName)
-                                            vscode.workspace.openTextDocument(openPath).then(doc => {
-                                                vscode.window.showTextDocument(doc).then(editor => {
+                                            var openPath = Uri.file(fileName)
+                                            workspace.openTextDocument(openPath).then(doc => {
+                                                window.showTextDocument(doc).then(editor => {
                                                 })
                                             })
                                         }
@@ -238,11 +296,11 @@ class HexaLinter {
                             if (info == null) {
                                 const fileName = path.resolve(msg.fileName)
 
-                                const editor = vscode.window.visibleTextEditors.filter(
+                                const editor = window.visibleTextEditors.filter(
                                     editor => path.resolve(editor.document.uri.fsPath) === fileName
                                 )[0]
 
-                                const document = editor ? editor.document : vscode.workspace.textDocuments.filter(
+                                const document = editor ? editor.document : workspace.textDocuments.filter(
                                     document => path.resolve(document.fileName) === fileName
                                 )[0]
 
@@ -257,13 +315,13 @@ class HexaLinter {
                                     }
                                     projectMessages.push(text)
 
-                                    if (showAlert) vscode.window
+                                    if (showAlert) window
                                         .showWarningMessage(text, button)
                                         .then(selection => {
                                             if (selection == button) {
-                                                var openPath = vscode.Uri.file(fileName)
-                                                vscode.workspace.openTextDocument(openPath).then(doc => {
-                                                    vscode.window.showTextDocument(doc).then(editor => {
+                                                var openPath = Uri.file(fileName)
+                                                workspace.openTextDocument(openPath).then(doc => {
+                                                    window.showTextDocument(doc).then(editor => {
                                                         this.lintDocument(doc)
                                                     })
                                                 })
@@ -299,18 +357,19 @@ class HexaLinter {
 
                             let errorWord = getWord(lineindoc.text, parsed.col)
 
-                            let range = new vscode.Range(
+                            let range = new Range(
                                 parsed.line, parsed.col,
                                 parsed.line, parsed.col + errorWord.length
                             )
 
-                            let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
+                            let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
                             info.diagnostics.push(diagnostic)
 
                             const line = parsed.line
+                            const position = new Position(line, 1024)
                             info.decorations.push({
                                 renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
-                                range: new vscode.Range(new vscode.Position(line, 1024), new vscode.Position(line, 1024))
+                                range: new Range(position, position)
                             })
                         }
                         catch (err) {
@@ -389,7 +448,7 @@ class HexaLinter {
                     // Parse the report
                     let entries = []
                     const decorationsArray = []
-                    const openEditor = vscode.window.visibleTextEditors.filter(
+                    const openEditor = window.visibleTextEditors.filter(
                         editor => editor.document.uri === document.uri
                     )[0]
 
@@ -407,18 +466,18 @@ class HexaLinter {
 
                             let errorWord = getWord(lineindoc.text, parsed.col)
 
-                            let range = new vscode.Range(
+                            let range = new Range(
                                 parsed.line, parsed.col,
                                 parsed.line, parsed.col + errorWord.length
                             )
 
-                            let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
+                            let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
                             diagnostics.push(diagnostic)
 
                             const line = parsed.line
                             decorationsArray.push({
                                 renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
-                                range: new vscode.Range(new vscode.Position(line, 1024), new vscode.Position(line, 1024))
+                                range: new Range(new Position(line, 1024), new Position(line, 1024))
                             })
                         }
                         catch (err) {
@@ -459,14 +518,14 @@ class HexaLinter {
         // Path check
         let path = this.config.get('path', '')
         if (path === '') {
-            vscode.window.showErrorMessage('hexa-lint path is not specified')
+            window.showErrorMessage('hexa-lint path is not specified')
             return
         }
 
         // Asynchronously run Hexa syntax linter
         let linter = childProcess.exec(
             `${path} syntax-linter ${document.fileName}`,
-            { 'cwd': vscode.workspace.rootPath } // Current working directory
+            { 'cwd': workspace.rootPath } // Current working directory
         )
         console.log("[Hexa-Lint] Compiler executed.")
         this.diagnostics.delete(document.uri)
@@ -521,13 +580,13 @@ class HexaLinter {
                     let errorWord = getWord(lineindoc.text, parsed.col)
                     console.log(`[Hexa-Lint] Word found.`, errorWord)
 
-                    let range = new vscode.Range(
+                    let range = new Range(
                         parsed.line, parsed.col,
                         parsed.line, parsed.col + errorWord.length
                     )
                     console.log(`Created range: `, range)
 
-                    let diagnostic = new vscode.Diagnostic(range, parsed.msgtext, vscode.DiagnosticSeverity.Error)
+                    let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
                     diagnostics.push(diagnostic)
                 }
                 catch (err) {
@@ -554,7 +613,7 @@ class HexaLinter {
     }
 
     updateConfig(config) {
-        this.config = vscode.workspace.getConfiguration('hexa')
+        this.config = workspace.getConfiguration('hexa')
         console.log("[Hexa-Lint] Configuration updated.")
     }
 }

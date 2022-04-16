@@ -6,10 +6,13 @@
 
 ## Features
 
+Requires Hexa compiler on your host or remote machine
+
  - Syntax highlighting
  - Advanced linting via language server
  - Providing snippets
- - Also compatible with [VSCodium](https://vscodium.com/)
+ - Module outline
+ - Other IDE features
 
 ![Features](features.png?raw=true)
 
