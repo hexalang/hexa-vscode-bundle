@@ -193,6 +193,15 @@ class HexaLinter {
         }
     }
 
+    hoverProvider(fsPath, line, character) {
+        return {
+            kind: 'HoverProvider',
+            payload: {
+                fsPath, line, character
+            }
+        }
+    }
+
     request(commands, onJSON, onError) {
         const req = http.request(options, res => {
             const chunks = []

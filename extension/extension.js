@@ -1,6 +1,11 @@
 "use strict"
 
 const vscode = require('vscode')
+const {
+    HoverProvider,
+    Hover
+} = require('vscode')
+
 const HexaLinter = require('./hexa-linter')
 
 exports.activate = function (context) {
@@ -76,6 +81,7 @@ exports.activate = function (context) {
 
     // TODO reuse last success result
     // TODO what to with unsaved files without fsPath?
+    /** @implements {vscode.DocumentSymbolProvider} */
     class HexaDocumentSymbolProvider {
         // Cache as string, not JSON, to use less memory
         cache = new Map()
@@ -134,10 +140,48 @@ exports.activate = function (context) {
 
     const providerSymbol = vscode.languages.registerDocumentSymbolProvider(
         sel,
-        new HexaDocumentSymbolProvider()
+        new HexaDocumentSymbolProvider(),
+        { label: 'Hexa' }
+    )
+
+    /** @implements {HoverProvider} */
+    class HexaHoverProvider {
+        provideHover(document, position, token) {
+            const commands = [linter.hoverProvider(document.uri.fsPath, position.line, position.character)]
+
+            return new Promise((resolve, reject) => {
+                linter.request(commands,
+                    onJSON => {
+                        const code = onJSON[0][0].code
+                        if (code && code.length > 0) {
+                            const hover = new vscode.MarkdownString()
+                            hover.appendCodeblock(code, 'hexa')
+                            const doc = onJSON[0][0].markdown
+                            if (doc && doc.length > 0) {
+                                hover.appendMarkdown('---')
+                                hover.appendMarkdown(doc)
+                            }
+                            resolve(new Hover(hover))
+                        }
+                        reject()
+                    },
+                    onError => {
+                        reject()
+                    }
+                )
+            })
+        }
+    }
+
+    // TODO go to def Ctrl+LMB / F12
+
+    const providerHover = vscode.languages.registerHoverProvider(
+        sel,
+        new HexaHoverProvider()
     )
 
     context.subscriptions.push(
+        providerHover,
         providerSymbol
     )
 }

@@ -16,5 +16,6 @@
     "javascript.format.semicolons": "remove",
     "cSpell.words": [
         "hexa"
-    ]
+    ],
+    "editor.formatOnPaste": true
 }
