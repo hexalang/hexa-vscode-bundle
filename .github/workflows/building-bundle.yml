@@ -1,0 +1,40 @@
+name: Building bundle
+
+on: [ push, pull_request ]
+
+jobs:
+  build-all:
+    name: 'Building'
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+        node-version: [ 16.x ]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm clean-install
+
+    - name: Build Hexa VSCode bundle
+      run: |
+        npx vsce package
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: vshexa-${{ matrix.os }}
+        path: '*.vsix'
