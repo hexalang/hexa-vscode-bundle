@@ -29,7 +29,6 @@ body:
       placeholder: |
         - Device
         - Operation system
-        - Editor
         - Version
     validations:
       required: true
