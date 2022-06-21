@@ -1,0 +1,7 @@
+.github/
+.vscode/
+node_modules/
+Thumbs.db
+*.bat
+*.cmd
+*.code-workspace
