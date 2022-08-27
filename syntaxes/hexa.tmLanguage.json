@@ -197,7 +197,15 @@
 		},
 		"literal-number": {
 			"name": "constant.numeric.hexa",
-			"match": "\\b([0-9]+([iu](8|16|32|64))?)\\b"
+			"match": "\\b([0-9]+([iu](8|16|32|64))?)\\b",
+			"captures": {
+				"1": {
+					"name": "constant.numeric.hexa"
+				},
+				"2": {
+					"name": "entity.name.type.numeric.hexa"
+				}
+			}
 		},
 		"literal-big-hexadecimal": {
 			"name": "constant.numeric.hexa",
