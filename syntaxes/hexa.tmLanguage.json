@@ -63,6 +63,10 @@
 				},
 				{
 					"name": "constant.language.hexa",
+					"match": "http(s)?:\/\/[a-zA-Z./[0-9]-?&✓%=+#@_]+"
+				},
+				{
+					"name": "constant.language.hexa",
 					"begin": "`",
 					"beginCaptures": {
 						"0": {
