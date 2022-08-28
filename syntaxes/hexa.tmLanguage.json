@@ -213,7 +213,15 @@
 		},
 		"literal-hexadecimal": {
 			"name": "constant.numeric.hexa",
-			"match": "\\b(0x[0-9A-Fa-f]+([iu](8|16|32|64))?)\\b"
+			"match": "\\b((0x)[0-9A-Fa-f]+([iu](8|16|32|64))?)\\b",
+			"captures": {
+				"2": {
+					"name": "entity.name.type.numeric.hexa"
+				},
+				"3": {
+					"name": "entity.name.type.numeric.hexa"
+				}
+			}
 		},
 		"literal-float": {
 			"name": "constant.numeric.hexa",
