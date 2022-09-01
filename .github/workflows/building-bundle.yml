@@ -2,9 +2,7 @@ name: Building bundle
 
 on:
   push:
-    branches: [ '**' ]
   pull_request:
-    branches: [ '**' ]
   release:
     types:
     - created
