@@ -64,5 +64,11 @@
 	},
 	"bugs": {
 		"url": "https://github.com/hexalang/hexa-vscode-bundle/issues"
+	},
+	"__metadata": {
+		"id": "a79bd051-d5ae-4fd7-a9c3-887b4cbe5b32",
+		"publisherDisplayName": "PeyTy",
+		"publisherId": "b8e63e5f-2436-4689-94b3-5b5ba4c7aece",
+		"isPreReleaseVersion": false
 	}
 }
