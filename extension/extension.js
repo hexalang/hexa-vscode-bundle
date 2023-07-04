@@ -61,6 +61,78 @@ exports.activate = function (context) {
 
     const sel = { scheme: 'file', language: 'hexa' }
 
+    const provider1 = vscode.languages.registerCompletionItemProvider(
+        sel,
+        {
+            provideCompletionItems(document, position, token, context) {
+                const fsPath = document.uri.fsPath
+
+                return new Promise((resolve, reject) => {
+
+                    const commandCompletionItemProvider = {
+                        kind: 'CompletionItemProvider',
+                        payload: {
+                            fsPath
+                        }
+                    }
+
+                    const commands = [commandCompletionItemProvider]
+
+                    const req = http.request(options, res => {
+                        const chunks = []
+
+                        res.on('data', chunk => {
+                            chunks.push(chunk)
+                        })
+
+                        res.on('end', () => {
+                            let json = []
+                            const sourceJson = Buffer.concat(chunks).toString()
+                            try {
+                                json = JSON.parse(sourceJson)
+                            } catch (e) {
+                                console.error(e)
+                                console.error('sourceJson:', sourceJson)
+                                reject()
+                            }
+
+                            resolve(json[0][0].map(complete => {
+                                const item = new vscode.CompletionItem(complete.name, complete.kind)
+
+                                if (complete.imported == '') {
+                                    item.documentation = 'Exported from the current module'
+                                    item.sortText = 'a'
+                                } else if (complete.imported == '*') {
+                                    item.documentation = 'Imported globally'
+                                    item.sortText = 'c'
+                                } else {
+                                    const fileUrl = url.pathToFileURL(complete.file).href
+                                    item.documentation = 'Imported from [`' + complete.imported + '`](' + fileUrl + ')'
+                                    item.sortText = 'b'
+                                }
+
+                                item.documentation = new vscode.MarkdownString(
+                                    '```hexa\n' + complete.detail + '\n```\n\n' +
+                                    item.documentation
+                                )
+                                return item
+                            }))
+                        })
+                    })
+
+                    req.on('error', error => {
+                        console.error(error)
+                        console.error('Cannot get json: ' + error.message)
+                        reject()
+                    })
+
+                    req.write(JSON.stringify(commands))
+                    req.end()
+                })
+            }
+        }
+    )
+
     class HexaConfigDocumentSymbolProvider {
         /**
         * @param {vscode.TextDocument} document
@@ -221,6 +293,7 @@ exports.activate = function (context) {
     )
 
     context.subscriptions.push(
+        provider1, // TODO rename
         providerHover,
         providerSymbol
     )
