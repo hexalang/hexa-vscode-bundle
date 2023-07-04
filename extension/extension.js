@@ -68,7 +68,7 @@ exports.activate = function (context) {
                 const fsPath = document.uri.fsPath
 
                 return new Promise((resolve, reject) => {
-
+                    // TODO move to separate file or HexaLinter
                     const commandCompletionItemProvider = {
                         kind: 'CompletionItemProvider',
                         payload: {
@@ -123,6 +123,7 @@ exports.activate = function (context) {
                     req.on('error', error => {
                         console.error(error)
                         console.error('Cannot get json: ' + error.message)
+                        linter.startServer()
                         reject()
                     })
 

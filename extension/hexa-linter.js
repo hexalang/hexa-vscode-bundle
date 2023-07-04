@@ -8,6 +8,7 @@ const {
     DiagnosticSeverity,
     Position,
     Uri,
+    ProgressLocation,
     workspace
 } = require('vscode')
 
@@ -42,6 +43,63 @@ class HexaLinter {
         this.files = new Map() // TODO group per-project (reported by server)
         this.updateConfig()
         this.busy = false
+    }
+
+    startServer() {
+        if (this.serverInProcessOfStarting) {
+            return
+        }
+
+        window.withProgress({
+            location: ProgressLocation.Notification,
+            title: "Starting Hexa language server...",
+            // TODO cancellable: true
+        }, (progress, token) => {
+            const promise = new Promise((resolve, reject) => {
+                if (this.serverInProcessOfStarting) {
+                    reject()
+                    return
+                }
+
+                this.serverInProcessOfStarting = true
+
+                const path = (this.config.get('path', '') || "").trim()
+                if (path === '') {
+                    window.showErrorMessage('Hexa compiler path is not specified. Please open extension settings.')
+                    // TODO is startsWith C:/ or contain spaces, wrap into " " on Windows
+                    reject()
+                    this.serverInProcessOfStarting = false
+                    return
+                }
+
+                const server = childProcess.exec(
+                    `${path} listen ${port}`,
+                    { 'cwd': workspace.rootPath }, // Current working directory
+                    // TODO proper cwd?
+                    (error, stdout, stderr) => {
+                        if (error) {
+                            window.showErrorMessage('Hexa compiler failed to start. Reason: ' + (error.signal || "NOSIGNAL") + " " + error.message)
+                            reject()
+                            this.serverInProcessOfStarting = false
+                            return
+                        }
+                    }
+                )
+
+                server.on('spawn', _ => {
+                    this.serverInProcessOfStarting = false
+                    resolve()
+                })
+
+                token.onCancellationRequested(() => {
+                    console.log("User canceled the long running operation")
+                    // TODO
+                    reject()
+                })
+            })
+
+            return promise
+        })
     }
 
     lintChange(documentChange) {
@@ -227,6 +285,7 @@ class HexaLinter {
 
         req.on('error', error => {
             console.error('Cannot get json: ' + error.message)
+            this.startServer()
         })
 
         req.write(JSON.stringify(commands))
@@ -423,6 +482,7 @@ class HexaLinter {
         req.on('error', error => {
             this.busy = false
             console.error('Cannot get json: ' + error.message)
+            this.startServer()
         })
 
         req.write(JSON.stringify(commands))
