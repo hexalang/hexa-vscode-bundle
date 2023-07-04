@@ -30,8 +30,11 @@ exports.activate = function (context) {
     const sel = { scheme: 'file', language: 'hexa' }
 
     class HexaConfigDocumentSymbolProvider {
+        /**
+        * @param {vscode.TextDocument} document
+        */
         provideDocumentSymbols(
-            document, // vscode.TextDocument
+            document,
             token // vscode.CancellationToken
         )
         // Promise<vscode.DocumentSymbol[]>
@@ -89,7 +92,6 @@ exports.activate = function (context) {
         // ^ autocomplete by latest successful parsing
 
         jsonToSymbol(symbol) {
-            console.log({ symbol })
             const range = new vscode.Range(
                 new vscode.Position(symbol.range.line, symbol.range.start),
                 new vscode.Position(symbol.range.line, symbol.range.end)
@@ -103,8 +105,11 @@ exports.activate = function (context) {
             )
         }
 
+        /**
+        * @param {vscode.TextDocument} document
+        */
         provideDocumentSymbols(
-            document, // vscode.TextDocument
+            document,
             token // vscode.CancellationToken
         )
         // Promise<vscode.DocumentSymbol[]>
@@ -146,6 +151,9 @@ exports.activate = function (context) {
 
     /** @implements {HoverProvider} */
     class HexaHoverProvider {
+        /**
+        * @param {vscode.TextDocument} document
+        */
         provideHover(document, position, token) {
             const commands = [linter.hoverProvider(document.uri.fsPath, position.line, position.character)]
 

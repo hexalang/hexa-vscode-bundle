@@ -287,6 +287,7 @@ class HexaLinter {
                                 projectMessages.push(msg.details)
 
                                 const button = 'Open hexa.json'
+                                // TODO option to not show this (or also a button Dont show again + config update)
                                 window
                                     .showErrorMessage(msg.details, button)
                                     .then(selection => {
@@ -382,7 +383,6 @@ class HexaLinter {
                             })
                         }
                         catch (err) {
-                            console.log(err)
                         }
                     }
 
