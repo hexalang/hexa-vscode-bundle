@@ -1,5 +1,6 @@
 "use strict"
 
+// Used for TypeScript JSDoc @types
 const vscode = require('vscode')
 const {
     HoverProvider,
@@ -7,6 +8,37 @@ const {
 } = require('vscode')
 
 const HexaLinter = require('./hexa-linter')
+const options = HexaLinter.options
+
+const http = require('http')
+const fs = require('fs')
+const path = require('path')
+const url = require('url')
+
+const onDidChangeTextDocuments = []
+const onDidChangeTextDocumentDelay = 444
+let onDidChangeTextDocumentLast = 0
+let onDidChangeTextDocumentTimer = 0
+const onDidChangeTextDocument = (document, linter) => {
+    if (!onDidChangeTextDocuments.includes(document)) {
+        onDidChangeTextDocuments.push(document)
+        // TODO dot Array.pushIfNotIncludes
+    }
+
+    const now = Date.now()
+    const ready = (now - onDidChangeTextDocumentLast) >= onDidChangeTextDocumentDelay
+    onDidChangeTextDocumentLast = now
+
+    if (ready && !linter.busy) {
+        while (onDidChangeTextDocuments.length > 0) {
+            const document = onDidChangeTextDocuments.pop()
+            linter.lintChangedDocument(document)
+        }
+    } else {
+        clearTimeout(onDidChangeTextDocumentTimer)
+        onDidChangeTextDocumentTimer = setTimeout(() => onDidChangeTextDocument(document, linter), onDidChangeTextDocumentDelay + 5)
+    }
+}
 
 exports.activate = function (context) {
     const diagnostics = vscode.languages.createDiagnosticCollection('hexa')
@@ -20,7 +52,7 @@ exports.activate = function (context) {
     workspace.textDocuments.forEach((document) => { linter.lint(document) })
     workspace.onDidOpenTextDocument((document) => { linter.lint(document) })
     workspace.onDidSaveTextDocument((document) => { linter.lint(document) })
-    workspace.onDidChangeTextDocument((document) => { linter.lintChange(document) })
+    workspace.onDidChangeTextDocument((documentChange) => { onDidChangeTextDocument(documentChange.document, linter) })
 
     // Discard cache
     workspace.onDidDeleteFiles((event) => { linter.onDidDeleteFiles(event) })

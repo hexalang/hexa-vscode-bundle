@@ -41,10 +41,15 @@ class HexaLinter {
         this.diagnostics = diagnostics
         this.files = new Map() // TODO group per-project (reported by server)
         this.updateConfig()
+        this.busy = false
     }
 
     lintChange(documentChange) {
         const document = documentChange.document
+        this.lintDocument(document)
+    }
+
+    lintChangedDocument(document) {
         this.lintDocument(document)
     }
 
@@ -253,6 +258,7 @@ class HexaLinter {
 
         const commands = [commandSyncFileContents, commandAutocheckProject]
 
+        this.busy = true
         const req = http.request(options, res => {
             const chunks = []
 
@@ -261,6 +267,8 @@ class HexaLinter {
             })
 
             res.on('end', () => {
+                this.busy = false
+
                 let json = []
                 const sourceJson = Buffer.concat(chunks).toString()
                 try {
@@ -278,6 +286,7 @@ class HexaLinter {
 
                     for (const msg of json[1]) {
                         try {
+                            if (msg.fileName == "") continue
                             let info = map.get(msg.fileName)
 
                             if (msg.fileName.endsWith('hexa.json')) {
@@ -373,6 +382,7 @@ class HexaLinter {
                             )
 
                             let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
+                            diagnostic.source = 'hexa'
                             info.diagnostics.push(diagnostic)
 
                             const line = parsed.line
@@ -383,6 +393,7 @@ class HexaLinter {
                             })
                         }
                         catch (err) {
+                            window.showWarningMessage(JSON.stringify(err), 'err')
                         }
                     }
 
@@ -410,6 +421,7 @@ class HexaLinter {
         })
 
         req.on('error', error => {
+            this.busy = false
             console.error('Cannot get json: ' + error.message)
         })
 
@@ -628,3 +640,4 @@ class HexaLinter {
 }
 
 module.exports = HexaLinter
+module.exports.options = options
