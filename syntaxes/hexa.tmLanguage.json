@@ -10,11 +10,14 @@
 		},
 		{
 			"name": "keyword.others.hexa",
-			"match": "\\s*#(if|else|end|elseif)\\b"
+			"match": "\\s*#(if|else|end|error|elseif)\\b"
 		},
 		{
 			"name": "keyword.declaration.hexa",
-			"match": "\\b(declare)\\b"
+			"match": "\\b(declare|extends|implements)\\b"
+		},
+		{
+			"include": "#enum"
 		},
 		{
 			"name": "storage.type.hexa",
@@ -45,6 +48,54 @@
 			"match": "@[a-z_][a-zA-Z_0-9]*\\b"
 		},
 		{
+			"comment": ".a.b",
+			"match": "(\\.)([a-z_][a-zA-Z_0-9]*)((\\.)([a-z_][a-zA-Z_0-9]*))?",
+			"captures": {
+				"1": {
+					"names": "punctuation.period.hexa",
+					"name": "keyword.operator.access.dot.hexa"
+				},
+				"2": {
+					"sname": "storage.attribute.hexa",
+					"ssname": "variable.other.hexa",
+					"good_name": "support.type.hexa",
+					"name": "entity.name.hexa"
+				},
+				"4": {
+					"sname": "entity.name.hexa",
+					"name": "keyword.operator.access.dot.hexa"
+				},
+				"5": {
+					"sname": "punctuation.period.hexa",
+					"name": "keyword.type.variable.hexa"
+				}
+			}
+		},
+		{
+			"name": "constant.language.hexa",
+			"begin": "\\$[a-z_][a-zA-Z_0-9]*\\(",
+			"beginCaptures": {
+				"0": {
+					"name": "constant.language.hexa"
+				}
+			},
+			"end": "\\)",
+			"endCaptures": {
+				"0": {
+					"name": "constant.language.hexa"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#macro-nested"
+				}
+			]
+		},
+		{
+			"name": "constant.language.hexa",
+			"match": "\\$[a-z_][a-zA-Z_0-9]*\\b"
+		},
+		{
 			"include": "#comment"
 		},
 		{
@@ -55,6 +106,41 @@
 		}
 	],
 	"repository": {
+		"macro-nested": {
+			"patterns": [
+				{
+					"name": "keyword.declaration.hexa",
+					"match": "\\$[a-z_][a-zA-Z_0-9]*\\b"
+				},
+				{
+					"begin": "\\(",
+					"beginCaptures": {
+						"0": {
+							"name": "constant.language.hexa"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "constant.language.hexa"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#macro-nested"
+						}
+					]
+				}
+			]
+		},
+		"doc-comment-markup": {
+			"patterns": [
+				{
+					"name": "storage.attribute.hexa",
+					"match": "@[a-z_][a-zA-Z_0-9]*\\b"
+				}
+			]
+		},
 		"comment-markup": {
 			"patterns": [
 				{
@@ -67,16 +153,88 @@
 				},
 				{
 					"name": "constant.language.hexa",
+					"begin": "```",
+					"beginCaptures": {
+						"0": {
+							"name": "constant.language.hexa"
+						}
+					},
+					"end": "```",
+					"endCaptures": {
+						"0": {
+							"name": "constant.language.hexa"
+						}
+					},
+					"patterns": [
+						{
+							"name": "comment.block.hexa",
+							"match": "^[ ]*// "
+						},
+						{
+							"name": "comment.block.hexa",
+							"match": "^[ ]*/// "
+						}
+					]
+				},
+				{
+					"name": "constant.language.hexa",
 					"begin": "`",
 					"beginCaptures": {
 						"0": {
 							"name": "constant.language.hexa"
 						}
 					},
-					"end": "`",
+					"end": "`|$",
 					"endCaptures": {
 						"0": {
 							"name": "constant.language.hexa"
+						}
+					}
+				},
+				{
+					"name": "markup.bold.markdown",
+					"begin": "\\*\\*",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.bold.markdown"
+						}
+					},
+					"end": "\\*\\*|$",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.bold.markdown"
+						}
+					},
+					"patterns": [
+						{
+							"name": "markup.italic.markdown",
+							"begin": "\\*",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.italic.markdown"
+								}
+							},
+							"end": "\\*",
+							"endCaptures": {
+								"0": {
+									"name": "punctuation.definition.italic.markdown"
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "markup.italic.markdown",
+					"begin": "\\*",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.italic.markdown"
+						}
+					},
+					"end": "\\*|$",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.italic.markdown"
 						}
 					}
 				}
@@ -118,13 +276,19 @@
 					"patterns": [
 						{
 							"name": "comment.block.documentation.hexa",
-							"begin": "(?<!/)///(?!/)",
+							"begin": "(?<!/)(///)(?!/)",
 							"beginCaptures": {
 								"0": {
 									"name": "punctuation.definition.comment.hexa"
+								},
+								"1": {
+									"name": "constant.character.escape.hexa"
 								}
 							},
 							"patterns": [
+								{
+									"include": "#doc-comment-markup"
+								},
 								{
 									"include": "#comment-markup"
 								}
@@ -184,6 +348,12 @@
 					"include": "#literal-big-hexadecimal"
 				},
 				{
+					"include": "#literal-binary"
+				},
+				{
+					"include": "#literal-big-binary"
+				},
+				{
 					"include": "#literal-string"
 				},
 				{
@@ -196,8 +366,9 @@
 			"match": "\\b([0-9]+n)\\b"
 		},
 		"literal-number": {
+			"comment": "1_2_3u64",
 			"name": "constant.numeric.hexa",
-			"match": "\\b([0-9]+([iu](8|16|32|64))?)\\b",
+			"match": "\\b([0-9][0-9_]*([iu](8|16|32|64))?)\\b",
 			"captures": {
 				"1": {
 					"name": "constant.numeric.hexa"
@@ -222,6 +393,14 @@
 					"name": "entity.name.type.numeric.hexa"
 				}
 			}
+		},
+		"literal-big-binary": {
+			"name": "constant.numeric.hexa",
+			"match": "\\b(0b[0-1]+n)\\b"
+		},
+		"literal-binary": {
+			"name": "constant.numeric.hexa",
+			"match": "\\b(0b[0-1]+([iu](8|16|32|64))?)\\b"
 		},
 		"literal-float": {
 			"name": "constant.numeric.hexa",
@@ -285,6 +464,44 @@
 					"name": "punctuation.definition.string.end.hexa"
 				}
 			}
+		},
+		"enum": {
+			"patterns": [
+				{
+					"comment": ".Tag",
+					"match": "(\\.)([A-Z][A-Za-z0-9_]*)\\b",
+					"captures": {
+						"1": {
+							"name": "keyword.operator.access.dot.hexa"
+						},
+						"2": {
+							"zname": "entity.name.type.enum.hexa",
+							"zzname": "support.type.hexa",
+							"name": "entity.name.type.enum.hexa"
+						}
+					}
+				},
+				{
+					"comment": "enum A B {",
+					"match": "\\b(enum)\\s+([A-Z][A-Za-z0-9_]*)\\s+([A-Z][A-Za-z0-9_]*)\\b",
+					"captures": {
+						"1": {
+							"sname": "storage.type.hexa",
+							"name": "keyword.type.enum.hexa"
+						},
+						"2": {
+							"sname": "constant.other.caps.hexa",
+							"zname": "entity.name.type.enum.hexa",
+							"name": "support.type.hexa"
+						},
+						"3": {
+							"sname": "constant.other.caps.hexa",
+							"zname": "storage.type.hexa",
+							"name": "entity.name.type.enum.hexa"
+						}
+					}
+				}
+			]
 		},
 		"operator": {
 			"patterns": [

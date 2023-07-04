@@ -26,8 +26,8 @@ AZ1_
 @asd
 @asdsa // valid
 @ASDSA // invalid
-@фыва // invalid
-@abcфыва // invalid
+//@σας // invalid
+//@abcσας // invalid
 
 #if|#else|#end|#elseif
 #if #else #end #elseif
@@ -70,6 +70,18 @@ not and or / \ b
 0.13
 1.13
 // invalid
+
+// literal-binary
+0b1
+0b0
+-0b0
+0b0101
+0b1111
+0b000
+// invalid
+0b
+0b0102
+0b1f
 
 // invalid
 123u

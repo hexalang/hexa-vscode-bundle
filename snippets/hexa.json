@@ -30,7 +30,7 @@
         },
         "do { } while(condition)": {
             "prefix": "do",
-            "body": "do {\n\t$2\n} while (${1:condition});"
+            "body": "do {\n\t$2\n} while ${1:condition}"
         },
         "condition ? true : false": {
             "prefix": "tern",
