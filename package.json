@@ -1,68 +1,68 @@
 {
-    "name": "vshexa",
-    "displayName": "Hexa",
-    "description": "Hexa Programming Language",
-    "version": "0.1.2",
-    "publisher": "PeyTy",
-    "author": "Bogdan Danylchenko",
-    "license": "LGPL-2.1-or-later",
-    "icon": "images/icon.png",
-    "homepage": "https://github.com/hexalang/hexa-vscode-bundle/blob/master/README.md",
-    "engines": {
-        "vscode": "^1.25.0"
-    },
-    "activationEvents": [
-        "onLanguage:hexa"
-    ],
-    "main": "./extension/extension.js",
-    "categories": [
-        "Programming Languages",
-        "Linters"
-    ],
-    "contributes": {
-        "languages": [
-            {
-                "id": "hexa",
-                "aliases": [
-                    "Hexa",
-                    "hexa"
-                ],
-                "extensions": [
-                    ".hexa"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "hexa",
-                "scopeName": "source.hexa",
-                "path": "./syntaxes/hexa.tmLanguage.json"
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "Hexa",
-            "properties": {
-                "hexa.path": {
-                    "type": "string",
-                    "default": "hexa",
-                    "description": "Path to Hexa compiler"
-                }
-            }
-        },
-        "snippets": [
-            {
-                "language": "hexa",
-                "path": "./snippets/hexa.json"
-            }
-        ]
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/hexalang/hexa-vscode-bundle.git"
-    },
-    "bugs": {
-        "url": "https://github.com/hexalang/hexa-vscode-bundle/issues"
-    }
+	"name": "vshexa",
+	"displayName": "Hexa",
+	"description": "Hexa Programming Language",
+	"version": "0.1.2",
+	"publisher": "PeyTy",
+	"author": "Bogdan Danylchenko",
+	"license": "LGPL-2.1-or-later",
+	"icon": "images/icon.png",
+	"homepage": "https://github.com/hexalang/hexa-vscode-bundle/blob/master/README.md",
+	"engines": {
+		"vscode": "^1.25.0"
+	},
+	"activationEvents": [
+		"onLanguage:hexa"
+	],
+	"main": "./extension/extension.js",
+	"categories": [
+		"Programming Languages",
+		"Linters"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "hexa",
+				"aliases": [
+					"Hexa",
+					"hexa"
+				],
+				"extensions": [
+					".hexa"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "hexa",
+				"scopeName": "source.hexa",
+				"path": "./syntaxes/hexa.tmLanguage.json"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Hexa",
+			"properties": {
+				"hexa.path": {
+					"type": "string",
+					"default": "hexa",
+					"description": "Path to Hexa compiler"
+				}
+			}
+		},
+		"snippets": [
+			{
+				"language": "hexa",
+				"path": "./snippets/hexa.json"
+			}
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/hexalang/hexa-vscode-bundle.git"
+	},
+	"bugs": {
+		"url": "https://github.com/hexalang/hexa-vscode-bundle/issues"
+	}
 }
