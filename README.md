@@ -1,6 +1,8 @@
 # Visual Studio Code support for [Hexa](https://github.com/hexalang)
 
-[![Join the Gitter chat](https://badges.gitter.im/hexalang/hexalang.svg)](https://gitter.im/hexalang/VSCode?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+[![GitHub Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/PeyTy)
+[![Patreon](https://img.shields.io/badge/Patreon-become%20a%20patron-F86753.svg)](https://www.patreon.com/PeyTy)
+[![Discord](https://img.shields.io/badge/Discord-join-758EDC.svg?logo=discord)](https://discord.gg/SsAWf9M)
 
 ![Screenshot](screenshot.png?raw=true)
 

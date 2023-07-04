@@ -15,7 +15,8 @@
     "editor.renderControlCharacters": true,
     "javascript.format.semicolons": "remove",
     "cSpell.words": [
-        "hexa"
+        "hexa",
+        "vsix"
     ],
     "editor.formatOnPaste": true
 }
