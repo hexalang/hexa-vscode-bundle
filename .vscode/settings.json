@@ -15,7 +15,10 @@
     "editor.renderControlCharacters": true,
     "javascript.format.semicolons": "remove",
     "cSpell.words": [
+        "Bogdan",
+        "Danylchenko",
         "hexa",
+        "vshexa",
         "vsix"
     ],
     "editor.formatOnPaste": true

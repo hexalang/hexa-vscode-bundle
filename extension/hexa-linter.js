@@ -30,9 +30,9 @@ const options = {
 }
 
 function getWord(line, col) {
-    let subline = line.substr(col, line.length - col)
+    const subLine = line.substr(col, line.length - col)
 
-    let word = subline.split("(")[0].split(" ")[0].split(",")[0].split(")")[0].split(".")[0]
+    const word = subLine.split("(")[0].split(" ")[0].split(",")[0].split(")")[0].split(".")[0]
 
     return word
 }
@@ -193,7 +193,7 @@ class HexaLinter {
                             let parsed = {
                                 line: msg.line - 1, //Number(match[2]) - 1,
                                 col: msg.column, //Number(match[3]), // FIXME // TODO
-                                msgtext: msg.details //match[4]
+                                msgText: msg.details //match[4]
                             }
 
                             let lineindoc = document.lineAt(parsed.line)
@@ -205,7 +205,7 @@ class HexaLinter {
                                 parsed.line, parsed.col + errorWord.length
                             )
 
-                            let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
+                            let diagnostic = new Diagnostic(range, parsed.msgText, DiagnosticSeverity.Error)
                             diagnostics.push(diagnostic)
 
                             const line = parsed.line
@@ -355,7 +355,7 @@ class HexaLinter {
                                 projectMessages.push(msg.details)
 
                                 const button = 'Open hexa.json'
-                                // TODO option to not show this (or also a button Dont show again + config update)
+                                // TODO option to not show this (or also a button Don't show again + config update)
                                 window
                                     .showErrorMessage(msg.details, button)
                                     .then(selection => {
@@ -425,7 +425,7 @@ class HexaLinter {
                             let parsed = {
                                 line: msg.line - 1, //Number(match[2]) - 1,
                                 col: msg.column, //Number(match[3]), // FIXME // TODO
-                                msgtext: msg.details //match[4]
+                                msgText: msg.details //match[4]
                             }
 
                             if (parsed.col < 0) parsed.col = 0
@@ -440,7 +440,7 @@ class HexaLinter {
                                 parsed.line, parsed.col + errorWord.length
                             )
 
-                            let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
+                            let diagnostic = new Diagnostic(range, parsed.msgText, DiagnosticSeverity.Error)
                             diagnostic.source = 'hexa'
                             info.diagnostics.push(diagnostic)
 
@@ -540,7 +540,7 @@ class HexaLinter {
                             let parsed = {
                                 line: msg.line - 1, //Number(match[2]) - 1,
                                 col: msg.column, //Number(match[3]), // FIXME // TODO
-                                msgtext: msg.details //match[4]
+                                msgText: msg.details //match[4]
                             }
 
                             let lineindoc = document.lineAt(parsed.line)
@@ -552,7 +552,7 @@ class HexaLinter {
                                 parsed.line, parsed.col + errorWord.length
                             )
 
-                            let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
+                            let diagnostic = new Diagnostic(range, parsed.msgText, DiagnosticSeverity.Error)
                             diagnostics.push(diagnostic)
 
                             const line = parsed.line
@@ -649,7 +649,7 @@ class HexaLinter {
                         filename: match[1],
                         line: Number(match[2]) - 1,
                         col: Number(match[3]), // FIXME // TODO
-                        msgtext: match[4]
+                        msgText: match[4]
                     }
 
                     console.log(`[Hexa-Lint] Compiler message parsed successfully.`, parsed)
@@ -667,7 +667,7 @@ class HexaLinter {
                     )
                     console.log(`Created range: `, range)
 
-                    let diagnostic = new Diagnostic(range, parsed.msgtext, DiagnosticSeverity.Error)
+                    let diagnostic = new Diagnostic(range, parsed.msgText, DiagnosticSeverity.Error)
                     diagnostics.push(diagnostic)
                 }
                 catch (err) {
