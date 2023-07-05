@@ -78,8 +78,14 @@ class HexaLinter {
                     // TODO proper cwd?
                     (error, stdout, stderr) => {
                         if (error) {
-                            window.showErrorMessage('Hexa compiler failed to start. Reason: ' + (error.signal || "NOSIGNAL") + " " + error.message)
-                            reject()
+                            const reason = "" + error.message
+                            if (reason.includes('EADDRINUSE')) {
+                                // This means that server was started from another extension thread
+                                resolve()
+                            } else {
+                                window.showErrorMessage('Hexa compiler failed to start. Reason: ' + reason)
+                                reject()
+                            }
                             this.serverInProcessOfStarting = false
                             return
                         }
