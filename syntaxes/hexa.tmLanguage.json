@@ -48,6 +48,10 @@
 			"match": "@[a-z_][a-zA-Z_0-9]*\\b"
 		},
 		{
+			"name": "keyword.operator.range.hexa",
+			"match": "\\.\\.\\."
+		},
+		{
 			"comment": ".a.b",
 			"match": "(\\.)([a-z_][a-zA-Z_0-9]*)((\\.)([a-z_][a-zA-Z_0-9]*))?",
 			"captures": {
