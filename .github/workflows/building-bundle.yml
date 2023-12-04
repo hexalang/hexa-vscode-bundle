@@ -66,6 +66,7 @@ jobs:
     - name: Publish Hexa VSCode bundle
       if: github.event_name == 'release' && github.event.action == 'created'
       run: |
+        node tagToVersion.js ${{ github.ref_name }}
         npx vsce publish
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
