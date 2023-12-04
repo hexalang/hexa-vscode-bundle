@@ -30,6 +30,10 @@
 				"extensions": [
 					".hexa"
 				],
+				"icon": {
+					"light": "./images/file.png",
+					"dark": "./images/file.png"
+				},
 				"configuration": "./language-configuration.json"
 			}
 		],
