@@ -18,6 +18,10 @@ Requires Hexa compiler on your host or remote machine
 
 ![Features](features.png?raw=true)
 
+## Web Extension
+
+This extension works in web VSCode environment like github.dev
+
 ## Install
 
 <https://marketplace.visualstudio.com/items?itemName=PeyTy.vshexa>

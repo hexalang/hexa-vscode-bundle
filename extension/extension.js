@@ -1,3 +1,4 @@
+// PeyTy (c) 2023
 "use strict"
 
 // Used for TypeScript JSDoc @types
