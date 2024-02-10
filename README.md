@@ -20,7 +20,7 @@ Requires Hexa compiler on your host or remote machine
 
 ## Web Extension
 
-This extension works in web VSCode environment like github.dev
+This extension works in web VSCode environments like github.dev
 
 ## Install
 
