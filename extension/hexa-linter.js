@@ -393,7 +393,8 @@ class HexaLinter {
 
                                     const basename = path.basename(fileName)
                                     const button = 'Open ' + basename
-                                    const text = 'You have errors in the `' + basename + '`'
+                                    // TODO option to disable this
+                                    const text = 'You have hints in the `' + basename + '`'
                                     if (projectMessages.includes(text)) {
                                         showAlert = false
                                     }
