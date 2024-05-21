@@ -451,10 +451,11 @@ class HexaLinter {
                             diagnostic.source = 'hexa'
                             info.diagnostics.push(diagnostic)
 
+                            // TODO option to disable this
                             const line = parsed.line
                             const position = new Position(line, 1024)
                             info.decorations.push({
-                                renderOptions: { after: { contentText: msg.details, color: '#BB0000' } },
+                                renderOptions: { after: { contentText: msg.details, color: 'var(--vscode-list-errorForeground)' } },
                                 range: new Range(position, position)
                             })
                         }
