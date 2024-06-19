@@ -272,7 +272,6 @@ exports.activate = function (context) {
                             hover.appendCodeblock(code, 'hexa')
                             const doc = onJSON[0][0].markdown
                             if (doc && doc.length > 0) {
-                                hover.appendMarkdown('---')
                                 hover.appendMarkdown(doc)
                             }
                             resolve(new Hover(hover))
