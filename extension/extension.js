@@ -255,6 +255,33 @@ exports.activate = function (context) {
         { label: 'Hexa' }
     )
 
+    // Formatting
+    vscode.languages.registerDocumentFormattingEditProvider('hexa', {
+        provideDocumentFormattingEdits(document/*: vscode.TextDocument*/, options, token)/*: vscode.TextEdit[]*/ {
+            const fullText = document.getText()
+            const fullFile = new vscode.Range(document.lineAt(0).range.start, document.lineAt(document.lineCount - 1).range.end)
+
+            return new Promise((resolve, reject) => {
+                const commands = [linter.wholeDocumentFormatting(fullText)]
+
+                linter.request(commands,
+                    onJSON => {
+                        const code = onJSON[0][0].content
+                        if (code && code.length > 0) {
+                            const edits = [vscode.TextEdit.replace(fullFile, code)]
+                            resolve(edits)
+                        } else {
+                            reject()
+                        }
+                    },
+                    onError => {
+                        reject()
+                    }
+                )
+            })
+        }
+    })
+
     /** @implements {HoverProvider} */
     class HexaHoverProvider {
         /**

@@ -271,6 +271,13 @@ class HexaLinter {
         }
     }
 
+    wholeDocumentFormatting(content) {
+        return {
+            kind: 'WholeDocumentFormatting',
+            payload: content
+        }
+    }
+
     request(commands, onJSON, onError) {
         const req = http.request(options, res => {
             const chunks = []
