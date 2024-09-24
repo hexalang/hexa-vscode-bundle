@@ -38,6 +38,12 @@
 				"configuration": "./language-configuration.json"
 			}
 		],
+		"jsonValidation": [
+			{
+				"fileMatch": "hexa.json",
+				"url": "./schemas/hexa.schema.json"
+			}
+		],
 		"grammars": [
 			{
 				"language": "hexa",
