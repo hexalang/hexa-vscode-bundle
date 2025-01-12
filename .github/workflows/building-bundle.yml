@@ -35,7 +35,7 @@ jobs:
         npx vsce package
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: vshexa-${{ github.sha }}
         path: '*.vsix'
@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest ]
-        node-version: [ 16.x ]
+        node-version: [ 18 ]
 
     steps:
     - name: Checkout
@@ -58,7 +58,7 @@ jobs:
         fetch-depth: 0
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
