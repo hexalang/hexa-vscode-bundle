@@ -20,6 +20,9 @@
 		"Programming Languages",
 		"Linters"
 	],
+	"sponsor": {
+		"url": "https://github.com/sponsors/PeyTy"
+	},
 	"contributes": {
 		"languages": [
 			{
