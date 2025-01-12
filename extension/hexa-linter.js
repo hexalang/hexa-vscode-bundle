@@ -386,13 +386,14 @@ class HexaLinter {
 
                             if (info == null) {
                                 const fileName = path.resolve(msg.fileName)
+                                const fileNameCase = fileName.toLowerCase()
 
                                 const editor = window.visibleTextEditors.filter(
-                                    editor => path.resolve(editor.document.uri.fsPath) === fileName
+                                    editor => path.resolve(editor.document.uri.fsPath).toLowerCase() === fileNameCase
                                 )[0]
 
                                 const document = editor ? editor.document : workspace.textDocuments.filter(
-                                    document => path.resolve(document.fileName) === fileName
+                                    document => path.resolve(document.fileName).toLowerCase() === fileNameCase
                                 )[0]
 
                                 if (editor == null && document == null) {
