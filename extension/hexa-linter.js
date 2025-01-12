@@ -468,7 +468,8 @@ class HexaLinter {
                             })
                         }
                         catch (err) {
-                            window.showWarningMessage(JSON.stringify(err), 'err')
+                            // In practice happens when trying to show errors in "Working Tree" diff view
+                            // window.showWarningMessage(JSON.stringify(err) + ' ' + err, 'Hide')
                         }
                     }
 
